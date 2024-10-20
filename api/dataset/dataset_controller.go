@@ -65,16 +65,16 @@ func (c *DatasetController) injectUnAuthenticatedRoutes() {
 // @Description Return info about dataset like number of records, number of columns, etc.
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.Dataset "The dataset info"
+// @Success 200 {object} models.DatasetInfoResponse "The dataset info"
 // @Failure 500 {object} models.ErrorInternalServerError "An error occurred"
 func (c *DatasetController) getDataset() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var dataset *models.Dataset
+		var dataset *models.DatasetInfoResponse
 		var err error
 
 		dataset, err = c.datasetService.GetDataset()
 		if err != nil {
-			ctx.JSON(500, models.ErrorInternalServerError{Message: "An error occurred"})
+			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
