@@ -35,7 +35,7 @@ task run
 
 ### Built binary
 
-Install task ([task installation guide](https://taskfile.dev/installation/)). Then at `root` of the project run
+Install `task` (installation guide [here](https://taskfile.dev/installation/)). Then at `root` of the project run
 
 ```console
 task build
@@ -43,4 +43,8 @@ task build
 
 Then under `/bin` you'll see a binary file, just open it and you'll have the backend up and running
 
-<!-- ![screenshot](docs/bin-screenshot.png) -->
+![screenshot](docs/bin-screenshot.png)
+
+## Documentation
+
+Swagger available at `host`/swagger/index.html
