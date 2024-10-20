@@ -2,7 +2,7 @@
 
 ![go](https://img.shields.io/badge/Go-00ADD8.svg?style=plain&logo=Go&logoColor=white)
 [![task](https://img.shields.io/badge/Task-29BEB0.svg?style=plain&logo=Task&logoColor=white)](https://taskfile.dev/installation/)
-![swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=plain&logo=Swagger&logoColor=black)
+![docekr](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)
 
 Server for [`aculei.xyz`](https://aculei.xyz)
 
@@ -15,7 +15,7 @@ git clone https://github.com/aculei/aculei-be.git
 ```
 
 > [!NOTE]
-> Docker image coming soon
+> Docker image incoming
 
 ## Run
 

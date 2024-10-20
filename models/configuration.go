@@ -31,7 +31,7 @@ func NewConfiguration() Configuration {
 	var env EnvironmentType
 
 	os.Setenv("GIN_MODE", "development")
-	os.Setenv("ACULEI_BE_HTTP_HOST", "localhost")
+	os.Setenv("ACULEI_BE_HTTP_HOST", "0.0.0.0")
 	os.Setenv("ACULEI_BE_HTTP_PORT", "8080")
 	string_environment := stringOrPanic("GIN_MODE")
 
