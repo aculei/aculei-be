@@ -23,7 +23,7 @@ func NewServer(
 	configuration models.Configuration,
 	datasetService *dataset.Service,
 ) *Server {
-	engine := gin.New()
+	engine := gin.Default()
 	engine.Use(cors.New(cors.Config{
 		AllowHeaders:     configuration.CORS.AllowHeaders,
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE"},
@@ -32,7 +32,7 @@ func NewServer(
 	}))
 
 	server := &Server{
-		engine:         gin.Default(),
+		engine:         engine,
 		configuration:  configuration,
 		datasetService: datasetService,
 	}

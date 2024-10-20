@@ -83,7 +83,7 @@ info:
   title: aculei-be
   version: 0.0.1
 paths:
-  /dataset:
+  /v1/dataset:
     get:
       consumes:
       - application/json
@@ -93,7 +93,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: The dataset info
           schema:
             $ref: '#/definitions/models.Dataset'
         "500":

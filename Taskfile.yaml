@@ -9,3 +9,7 @@ tasks:
   build:
     cmds:
       - go build -ldflags "-s -w" -o bin/app
+  run:
+    cmds:
+      - go run main.go
+    desc: Run the application

@@ -18,7 +18,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/dataset": {
+        "/v1/dataset": {
             "get": {
                 "description": "Return info about dataset like number of records, number of columns, etc.",
                 "consumes": [
@@ -33,7 +33,7 @@ const docTemplate = `{
                 "summary": "return dataset info",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "The dataset info",
                         "schema": {
                             "$ref": "#/definitions/models.Dataset"
                         }
