@@ -1,12 +1,13 @@
 # aculei-be
 
 ![go](https://img.shields.io/badge/Go-00ADD8.svg?style=plain&logo=Go&logoColor=white)
-[![task](https://img.shields.io/badge/Task-29BEB0.svg?style=plain&logo=Task&logoColor=white)](https://taskfile.dev/installation/)
-![docekr](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)
+![docker](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)
 
 Server for [`aculei.xyz`](https://aculei.xyz)
 
 ## Install
+
+### ![github](https://img.shields.io/badge/GitHub-181717.svg?style=plain&logo=GitHub&logoColor=white)
 
 Clone the repository
 
@@ -14,12 +15,15 @@ Clone the repository
 git clone https://github.com/aculei/aculei-be.git
 ```
 
-> [!NOTE]
-> Docker image incoming
+### ![docker](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)
+
+```console
+docker pull ghcr.io/aculei/aculei-be:main
+```
 
 ## Run
 
-### From source
+### ![github](https://img.shields.io/badge/GitHub-181717.svg?style=plain&logo=GitHub&logoColor=white)
 
 At `root` of the project run
 
@@ -33,7 +37,19 @@ or if you have [task](https://taskfile.dev/installation/) installed
 task run
 ```
 
-### Built binary
+### ![docker](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)
+
+```console
+docker run -d -p 8080:8080 ghcr.io/aculei/aculei-be:main
+```
+
+Platform specific
+
+```console
+docker run -d -p 8080:8080 ghcr.io/aculei/aculei-be:main --platform linux/amd64
+```
+
+[![task](https://img.shields.io/badge/Task-29BEB0.svg?style=plain&logo=Task&logoColor=white)](https://taskfile.dev/installation/)
 
 Install `task` (installation guide [here](https://taskfile.dev/installation/)). Then at `root` of the project run
 
@@ -43,7 +59,7 @@ task build
 
 Then under `/bin` you'll see a binary file, just open it and you'll have the backend up and running
 
-![screenshot](docs/bin-screenshot.png)
+<!-- ![screenshot](docs/bin-screenshot.png) -->
 
 ## Documentation
 
