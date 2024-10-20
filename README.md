@@ -11,7 +11,7 @@ Server for [`aculei.xyz`](https://aculei.xyz)
 Clone the repository
 
 ```console
-git clone https://github.com/micheledinelli/aculei-be.git
+git clone https://github.com/aculei/aculei-be.git
 ```
 
 > [!NOTE]
