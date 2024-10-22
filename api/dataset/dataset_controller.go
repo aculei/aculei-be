@@ -52,12 +52,12 @@ func (c *DatasetController) injectUnAuthenticatedRoutes() {
 	{
 		v1.GET(
 			"dataset/",
-			c.getDataset(),
+			c.getDatasetInfo(),
 		)
 	}
 }
 
-// getDataset godoc
+// getDatasetInfo godoc
 // @Tags dataset
 // @Schemes https
 // @Router /v1/dataset [get]
@@ -67,12 +67,12 @@ func (c *DatasetController) injectUnAuthenticatedRoutes() {
 // @Produce json
 // @Success 200 {object} models.DatasetInfoResponse "The dataset info"
 // @Failure 500 {object} models.ErrorInternalServerError "An error occurred"
-func (c *DatasetController) getDataset() gin.HandlerFunc {
+func (c *DatasetController) getDatasetInfo() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var dataset *models.DatasetInfoResponse
+		var dataset *models.DatasetInfo
 		var err error
 
-		dataset, err = c.datasetService.GetDataset()
+		dataset, err = c.datasetService.GetDatasetInfo()
 		if err != nil {
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return

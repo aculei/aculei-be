@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"strconv"
-	"time"
 )
 
 type EnvironmentType string
@@ -14,12 +13,20 @@ const (
 	Production  EnvironmentType = "production"
 )
 
+type DBConfiguration struct {
+	Host string
+	Port string
+	User string
+	Pass string
+	Name string
+}
+
 type Configuration struct {
-	Environment          EnvironmentType
-	HTTPHost             string
-	HTTPPort             int
-	CORS                 CORSConfiguration
-	GracefulExitDuration time.Duration
+	Environment EnvironmentType
+	HTTPHost    string
+	HTTPPort    int
+	CORS        CORSConfiguration
+	DB          DBConfiguration
 }
 
 type CORSConfiguration struct {
@@ -29,20 +36,25 @@ type CORSConfiguration struct {
 
 func NewConfiguration() Configuration {
 	var env EnvironmentType
+	string_environment := stringOrPanic("GIN_MODE")
 
 	os.Setenv("GIN_MODE", "development")
 	os.Setenv("ACULEI_BE_HTTP_HOST", "0.0.0.0")
 	os.Setenv("ACULEI_BE_HTTP_PORT", "8080")
-	string_environment := stringOrPanic("GIN_MODE")
+
+	os.Setenv("ACULEI_BE_DB_HOST", "localhost")
+	os.Setenv("ACULEI_BE_DB_PORT", "5432")
+	os.Setenv("ACULEI_BE_DB_USER", "admin")
+	os.Setenv("ACULEI_BE_DB_PASS", "admin")
+	os.Setenv("ACULEI_BE_DB_NAME", "aculei")
+	httpHost := stringOrPanic("ACULEI_BE_HTTP_HOST")
+	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")
 
 	if string_environment == "production" {
 		env = Production
 	} else {
 		env = Development
 	}
-
-	httpHost := stringOrPanic("ACULEI_BE_HTTP_HOST")
-	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")
 
 	return Configuration{
 		Environment: env,
@@ -51,6 +63,13 @@ func NewConfiguration() Configuration {
 		CORS: CORSConfiguration{
 			AllowOrigins: []string{"*"},
 			AllowHeaders: []string{},
+		},
+		DB: DBConfiguration{
+			Host: stringOrPanic("ACULEI_BE_DB_HOST"),
+			Port: stringOrPanic("ACULEI_BE_DB_PORT"),
+			User: stringOrPanic("ACULEI_BE_DB_USER"),
+			Pass: stringOrPanic("ACULEI_BE_DB_PASS"),
+			Name: stringOrPanic("ACULEI_BE_DB_NAME"),
 		},
 	}
 }

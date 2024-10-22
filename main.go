@@ -6,13 +6,14 @@ import (
 
 	"github.com/micheledinelli/aculei-be/api"
 	"github.com/micheledinelli/aculei-be/api/dataset"
+	"github.com/micheledinelli/aculei-be/db"
 	_ "github.com/micheledinelli/aculei-be/docs"
 	"github.com/micheledinelli/aculei-be/models"
 )
 
 // @title aculei-be
 // @version 0.0.1
-// @description The purpose of this microservice is to serve aculei.xyz
+// @description Live to serve aculei.xyz
 // @contact.email dinellimichele00@gmail.com
 // @contact.name Michele Dinelli
 
@@ -21,13 +22,16 @@ import (
 func main() {
 	var err error
 
-	_, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
 	defer cancel()
 
 	configuration := models.NewConfiguration()
 
-	datasetService := dataset.NewService(configuration)
+	database, err := db.NewDb(ctx, configuration)
+	repository := database.InitRepositories()
+
+	datasetService := dataset.NewService(configuration, repository)
 
 	if err = api.NewServer(
 		configuration,
