@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build -o aculei-be
+RUN go build -o /aculei-be
 
 EXPOSE 8080
 
