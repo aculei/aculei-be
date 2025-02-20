@@ -45,7 +45,7 @@ func NewConfiguration() Configuration {
 
 	os.Setenv("GIN_MODE", "development")
 	os.Setenv("ACULEI_BE_HTTP_HOST", "0.0.0.0")
-	os.Setenv("ACULEI_BE_HTTP_PORT", "8080")
+	os.Setenv("ACULEI_BE_HTTP_PORT", "8888")
 
 	httpHost := stringOrPanic("ACULEI_BE_HTTP_HOST")
 	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")

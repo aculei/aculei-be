@@ -1,6 +1,6 @@
 package models
 
-type Archive struct {
+type AculeiImage struct {
 	Id              string   `bson:"id" json:"id" example:"d38a0ec061a460466c253efe9a62cb14"`
 	ImageName       string   `bson:"image_name" json:"image_name" example:"TF_ACULEI_01062021-2741.jpg"`
 	PredictedAnimal string   `bson:"predicted_animal" json:"predicted_animal" example:"fox"`

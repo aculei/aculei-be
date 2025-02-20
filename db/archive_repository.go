@@ -20,10 +20,10 @@ func NewArchiveRepository(mongo *Mongo) *ArchiveRepository {
 	}
 }
 
-func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.Archive, error) {
+func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
-	var archiveList []models.Archive
+	var archiveList []models.AculeiImage
 
 	cursor, err := coll.Find(ctx, bson.D{})
 	if err != nil {
@@ -43,7 +43,7 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.Archi
 		// }
 
 		// Convert bson.M to models.Archive
-		archive := models.Archive{}
+		archive := models.AculeiImage{}
 		archive.Id = res["id"].(string)
 		archive.Cam = res["cam"].(string)
 		archive.PredictedAnimal = res["predicted_animal"].(string)
@@ -57,4 +57,17 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.Archi
 	}
 
 	return &archiveList, nil
+}
+
+func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
+	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
+
+	var aculeiImage models.AculeiImage
+
+	if err := res.Decode(&aculeiImage); err != nil {
+		return nil, fmt.Errorf("error decoding archive image: %w", err)
+	}
+
+	return &aculeiImage, nil
 }

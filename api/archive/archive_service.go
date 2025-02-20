@@ -25,6 +25,10 @@ func NewService(
 	}
 }
 
-func (s *Service) GetArchiveList(ctx context.Context) (*[]models.Archive, error) {
+func (s *Service) GetArchiveList(ctx context.Context) (*[]models.AculeiImage, error) {
 	return s.archiveRepo.GetArchiveList(ctx)
+}
+
+func (s *Service) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+	return s.archiveRepo.GetArchiveImage(ctx, imageId)
 }

@@ -16,12 +16,12 @@ import (
 // @description Live to serve aculei.xyz
 // @contact.email dinellimichele00@gmail.com
 // @contact.name Michele Dinelli
-
-// @host      localhost:8080
+// @host localhost:8888
+// @schemes http https
+// @BasePath /
 
 func main() {
 	var err error
-	println("Starting server")
 
 	ctx, cancel := context.WithCancel(context.Background())
 

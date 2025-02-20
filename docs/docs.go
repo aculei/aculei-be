@@ -37,8 +37,46 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Archive"
+                                "$ref": "#/definitions/models.AculeiImage"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/archive/image/{id}": {
+            "get": {
+                "description": "Returns a single archive with its metadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "archive"
+                ],
+                "summary": "Returns a single archive image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the archive image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The archive image and its metadata",
+                        "schema": {
+                            "$ref": "#/definitions/models.AculeiImage"
                         }
                     },
                     "500": {
@@ -52,7 +90,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Archive": {
+        "models.AculeiImage": {
             "type": "object",
             "properties": {
                 "cam": {
@@ -114,9 +152,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "0.0.1",
-	Host:             "localhost:8080",
-	BasePath:         "",
-	Schemes:          []string{},
+	Host:             "localhost:8888",
+	BasePath:         "/",
+	Schemes:          []string{"http", "https"},
 	Title:            "aculei-be",
 	Description:      "Live to serve aculei.xyz",
 	InfoInstanceName: "swagger",

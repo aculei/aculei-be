@@ -1,5 +1,6 @@
+basePath: /
 definitions:
-  models.Archive:
+  models.AculeiImage:
     properties:
       cam:
         example: CAM5
@@ -39,7 +40,7 @@ definitions:
           type: string
         type: array
     type: object
-host: localhost:8080
+host: localhost:8888
 info:
   contact:
     email: dinellimichele00@gmail.com
@@ -60,7 +61,7 @@ paths:
           description: The list of archive images
           schema:
             items:
-              $ref: '#/definitions/models.Archive'
+              $ref: '#/definitions/models.AculeiImage'
             type: array
         "500":
           description: An error occurred
@@ -69,4 +70,32 @@ paths:
       summary: Return a list of archive images
       tags:
       - archive
+  /v1/archive/image/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a single archive with its metadata
+      parameters:
+      - description: the archive image id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The archive image and its metadata
+          schema:
+            $ref: '#/definitions/models.AculeiImage'
+        "500":
+          description: An error occurred
+          schema:
+            $ref: '#/definitions/models.ErrorResponseModel'
+      summary: Returns a single archive image
+      tags:
+      - archive
+schemes:
+- http
+- https
 swagger: "2.0"

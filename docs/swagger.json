@@ -1,4 +1,8 @@
 {
+    "schemes": [
+        "http",
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "Live to serve aculei.xyz",
@@ -9,7 +13,8 @@
         },
         "version": "0.0.1"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8888",
+    "basePath": "/",
     "paths": {
         "/v1/archive": {
             "get": {
@@ -30,8 +35,46 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Archive"
+                                "$ref": "#/definitions/models.AculeiImage"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/archive/image/{id}": {
+            "get": {
+                "description": "Returns a single archive with its metadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "archive"
+                ],
+                "summary": "Returns a single archive image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the archive image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The archive image and its metadata",
+                        "schema": {
+                            "$ref": "#/definitions/models.AculeiImage"
                         }
                     },
                     "500": {
@@ -45,7 +88,7 @@
         }
     },
     "definitions": {
-        "models.Archive": {
+        "models.AculeiImage": {
             "type": "object",
             "properties": {
                 "cam": {

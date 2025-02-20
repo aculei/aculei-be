@@ -54,6 +54,11 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 			"archive",
 			c.getArchiveList(),
 		)
+
+		v1.GET(
+			"archive/image/:id",
+			c.getArchiveImage(),
+		)
 	}
 }
 
@@ -65,11 +70,11 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Description Return the list of all the archive images with their metadata
 // @Accept json
 // @Produce json
-// @Success 200 {array} models.Archive "The list of archive images"
+// @Success 200 {array} models.AculeiImage "The list of archive images"
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var archiveList *[]models.Archive
+		var archiveList *[]models.AculeiImage
 		var err error
 
 		archiveList, err = c.archiveService.GetArchiveList(ctx)
@@ -80,5 +85,34 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, archiveList)
+	}
+}
+
+// getArchiveImage godoc
+// @Tags archive
+// @Schemes http
+// @Router /v1/archive/image/{id} [get]
+// @Param id path string true "the archive image id"
+// @Summary Returns a single archive image
+// @Description Returns a single archive with its metadata
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.AculeiImage "The archive image and its metadata"
+// @Failure 500 {object} models.ErrorResponseModel "An error occurred"
+func (c *ArchiveController) getArchiveImage() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var archiveImage *models.AculeiImage
+		var err error
+
+		id := ctx.Param("id")
+
+		archiveImage, err = c.archiveService.GetArchiveImage(ctx, id)
+		if err != nil {
+			c.logger.Error().Err(err).Msg("Error getting archive image")
+			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
+			return
+		}
+
+		ctx.JSON(200, archiveImage)
 	}
 }

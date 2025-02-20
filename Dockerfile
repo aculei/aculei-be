@@ -10,6 +10,6 @@ COPY . ./
 
 RUN go build -o /aculei-be
 
-EXPOSE 8080
+EXPOSE 8888
 
 CMD ["/aculei-be"]
