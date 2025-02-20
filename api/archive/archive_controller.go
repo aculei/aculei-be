@@ -66,25 +66,55 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Tags archive
 // @Schemes http
 // @Router /v1/archive [get]
-// @Summary Return a list of archive images
-// @Description Return the list of all the archive images with their metadata
+// @Param page query int false "page index starting from 0"
+// @Param size query int false "number of items per page"
+// @Summary Returns a paginated response with the list of archive images
+// @Description Return the list of all the archive images with their metadata. The response is paginated.
 // @Accept json
 // @Produce json
-// @Success 200 {array} models.AculeiImage "The list of archive images"
+// @Success 200 {object} models.PaginatedResponseModel[models.AculeiImage] "The list of archive images"
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var archiveList *[]models.AculeiImage
+		var archiveCount int
 		var err error
 
-		archiveList, err = c.archiveService.GetArchiveList(ctx)
+		page := ctx.Query("page")
+		size := ctx.Query("size")
+
+		archiveCount, err = c.archiveService.GetArchiveListCount(ctx)
+		if err != nil {
+			c.logger.Error().Err(err).Msg("Error getting archive list count")
+			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
+			return
+		}
+
+		paginator := models.NewPaginator(page, size, archiveCount)
+
+		archiveList, err = c.archiveService.GetArchiveList(ctx, *paginator)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive list")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
-		ctx.JSON(200, archiveList)
+		var next *int
+		if (paginator.Page+1)*paginator.Size < archiveCount {
+			nextVal := paginator.Page + 1
+			next = &nextVal
+		}
+
+		response := models.PaginatedResponseModel[models.AculeiImage]{
+			Page:  paginator.Page,
+			Size:  paginator.Size,
+			Next:  next,
+			Data:  *archiveList,
+			Total: archiveCount,
+			Count: len(*archiveList),
+		}
+
+		ctx.JSON(200, response)
 	}
 }
 

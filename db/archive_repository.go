@@ -8,6 +8,7 @@ import (
 
 	"github.com/micheledinelli/aculei-be/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ArchiveRepository struct {
@@ -20,12 +21,18 @@ func NewArchiveRepository(mongo *Mongo) *ArchiveRepository {
 	}
 }
 
-func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.AculeiImage, error) {
+func (r *ArchiveRepository) GetArchiveList(
+	ctx context.Context,
+	paginator models.Paginator) (*[]models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
 	var archiveList []models.AculeiImage
 
-	cursor, err := coll.Find(ctx, bson.D{})
+	findOptions := options.Find()
+	findOptions.SetLimit(int64(paginator.Size))
+	findOptions.SetSkip(int64(paginator.Size * paginator.Page))
+
+	cursor, err := coll.Find(ctx, bson.D{}, findOptions)
 	if err != nil {
 		return nil, fmt.Errorf("error getting archive list: %w", err)
 	}
@@ -38,11 +45,6 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.Acule
 			return nil, fmt.Errorf("error decoding archive list: %w", err)
 		}
 
-		// for k, v := range res {
-		// 	fmt.Printf("Key: %s, Value: %v\n", k, v)
-		// }
-
-		// Convert bson.M to models.Archive
 		archive := models.AculeiImage{}
 		archive.Id = res["id"].(string)
 		archive.Cam = res["cam"].(string)
@@ -57,6 +59,17 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context) (*[]models.Acule
 	}
 
 	return &archiveList, nil
+}
+
+func (r *ArchiveRepository) GetArchiveListCount(ctx context.Context) (int, error) {
+	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
+
+	count, err := coll.CountDocuments(ctx, bson.D{})
+	if err != nil {
+		return 0, fmt.Errorf("error counting archive list: %w", err)
+	}
+
+	return int(count), nil
 }
 
 func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {

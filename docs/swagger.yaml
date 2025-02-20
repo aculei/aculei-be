@@ -40,6 +40,19 @@ definitions:
           type: string
         type: array
     type: object
+  models.PaginatedResponseModel-models_AculeiImage:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.AculeiImage'
+        type: array
+      next:
+        type: integer
+      page:
+        type: integer
+      size:
+        type: integer
+    type: object
 host: localhost:8888
 info:
   contact:
@@ -54,15 +67,22 @@ paths:
       consumes:
       - application/json
       description: Return the list of all the archive images with their metadata
+      parameters:
+      - description: page index starting from 1
+        in: query
+        name: page
+        type: integer
+      - description: number of items per page
+        in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: The list of archive images
           schema:
-            items:
-              $ref: '#/definitions/models.AculeiImage'
-            type: array
+            $ref: '#/definitions/models.PaginatedResponseModel-models_AculeiImage'
         "500":
           description: An error occurred
           schema:

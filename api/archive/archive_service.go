@@ -25,8 +25,12 @@ func NewService(
 	}
 }
 
-func (s *Service) GetArchiveList(ctx context.Context) (*[]models.AculeiImage, error) {
-	return s.archiveRepo.GetArchiveList(ctx)
+func (s *Service) GetArchiveList(ctx context.Context, paginator models.Paginator) (*[]models.AculeiImage, error) {
+	return s.archiveRepo.GetArchiveList(ctx, paginator)
+}
+
+func (s *Service) GetArchiveListCount(ctx context.Context) (int, error) {
+	return s.archiveRepo.GetArchiveListCount(ctx)
 }
 
 func (s *Service) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {

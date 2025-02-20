@@ -31,14 +31,25 @@ const docTemplate = `{
                     "archive"
                 ],
                 "summary": "Return a list of archive images",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page index starting from 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "number of items per page",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "The list of archive images",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.AculeiImage"
-                            }
+                            "$ref": "#/definitions/models.PaginatedResponseModel-models_AculeiImage"
                         }
                     },
                     "500": {
@@ -143,6 +154,26 @@ const docTemplate = `{
                         "param1",
                         "param2"
                     ]
+                }
+            }
+        },
+        "models.PaginatedResponseModel-models_AculeiImage": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AculeiImage"
+                    }
+                },
+                "next": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
                 }
             }
         }
