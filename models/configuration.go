@@ -2,8 +2,11 @@ package models
 
 import (
 	"errors"
+	"log"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 type EnvironmentType string
@@ -14,11 +17,7 @@ const (
 )
 
 type DBConfiguration struct {
-	Host string
-	Port string
-	User string
-	Pass string
-	Name string
+	MongoUri string
 }
 
 type Configuration struct {
@@ -36,19 +35,21 @@ type CORSConfiguration struct {
 
 func NewConfiguration() Configuration {
 	var env EnvironmentType
+	var err error
+
+	if err = godotenv.Load(); err != nil {
+		log.Println("Couldn't load .env file")
+	}
+
 	string_environment := stringOrPanic("GIN_MODE")
 
 	os.Setenv("GIN_MODE", "development")
 	os.Setenv("ACULEI_BE_HTTP_HOST", "0.0.0.0")
 	os.Setenv("ACULEI_BE_HTTP_PORT", "8080")
 
-	os.Setenv("ACULEI_BE_DB_HOST", "localhost")
-	os.Setenv("ACULEI_BE_DB_PORT", "5432")
-	os.Setenv("ACULEI_BE_DB_USER", "admin")
-	os.Setenv("ACULEI_BE_DB_PASS", "admin")
-	os.Setenv("ACULEI_BE_DB_NAME", "aculei")
 	httpHost := stringOrPanic("ACULEI_BE_HTTP_HOST")
 	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")
+	mongoUri := stringOrPanic("MONGO_URI")
 
 	if string_environment == "production" {
 		env = Production
@@ -65,11 +66,7 @@ func NewConfiguration() Configuration {
 			AllowHeaders: []string{},
 		},
 		DB: DBConfiguration{
-			Host: stringOrPanic("ACULEI_BE_DB_HOST"),
-			Port: stringOrPanic("ACULEI_BE_DB_PORT"),
-			User: stringOrPanic("ACULEI_BE_DB_USER"),
-			Pass: stringOrPanic("ACULEI_BE_DB_PASS"),
-			Name: stringOrPanic("ACULEI_BE_DB_NAME"),
+			MongoUri: mongoUri,
 		},
 	}
 }

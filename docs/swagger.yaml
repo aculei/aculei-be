@@ -1,106 +1,72 @@
 definitions:
-  models.Dataset:
+  models.Archive:
     properties:
-      badger:
+      cam:
+        example: CAM5
         type: string
-      buzzard:
+      date:
+        example: "2021-06-01 22:47:09"
         type: string
-      camera_1_coordinates:
+      id:
+        example: d38a0ec061a460466c253efe9a62cb14
         type: string
-      camera_2_coordinates:
+      image_name:
+        example: TF_ACULEI_01062021-2741.jpg
         type: string
-      camera_3_coordinates:
+      moon_phase:
+        example: Waning Crescent
         type: string
-      camera_4_coordinates:
+      predicted_animal:
+        example: fox
         type: string
-      camera_5_coordinates:
-        type: string
-      camera_6_coordinates:
-        type: string
-      camera_7_coordinates:
-        type: string
-      cat:
-        type: string
-      deer:
-        type: string
-      fox:
-        type: string
-      hare:
-        type: string
-      heron:
-        type: string
-      horse:
-        type: string
-      mallard:
-        type: string
-      marten:
-        type: string
-      photos_autumn:
-        type: string
-      photos_camera_1:
-        type: string
-      photos_camera_2:
-        type: string
-      photos_camera_3:
-        type: string
-      photos_camera_4:
-        type: string
-      photos_camera_5:
-        type: string
-      photos_camera_6:
-        type: string
-      photos_camera_7:
-        type: string
-      photos_spring:
-        type: string
-      photos_summer:
-        type: string
-      photos_winter:
-        type: string
-      porcupine:
-        type: string
-      squirrel:
-        type: string
-      total_records:
-        type: string
-      wild_boar:
-        type: string
-      wolf:
-        type: string
+      temperature:
+        example: 12
+        type: number
     type: object
-  models.ErrorInternalServerError:
+  models.ErrorResponseModel:
     properties:
       message:
-        example: internal server error
+        example: invalid
         type: string
+      param:
+        example: param_name
+        type: string
+      params:
+        example:
+        - param1
+        - param2
+        items:
+          type: string
+        type: array
     type: object
 host: localhost:8080
 info:
   contact:
     email: dinellimichele00@gmail.com
     name: Michele Dinelli
-  description: The purpose of this microservice is to serve aculei.xyz
+  description: Live to serve aculei.xyz
   title: aculei-be
   version: 0.0.1
 paths:
-  /v1/dataset:
+  /v1/archive:
     get:
       consumes:
       - application/json
-      description: Return info about dataset like number of records, number of columns,
-        etc.
+      description: Return the list of all the archive images with their metadata
       produces:
       - application/json
       responses:
         "200":
-          description: The dataset info
+          description: The list of archive images
           schema:
-            $ref: '#/definitions/models.Dataset'
+            items:
+              $ref: '#/definitions/models.Archive'
+            type: array
         "500":
           description: An error occurred
           schema:
-            $ref: '#/definitions/models.ErrorInternalServerError'
-      summary: return dataset info
+            $ref: '#/definitions/models.ErrorResponseModel'
+      summary: Return a list of archive images
       tags:
-      - dataset
+      - archive
 swagger: "2.0"

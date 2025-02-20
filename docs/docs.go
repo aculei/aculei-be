@@ -18,9 +18,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/dataset": {
+        "/v1/archive": {
             "get": {
-                "description": "Return info about dataset like number of records, number of columns, etc.",
+                "description": "Return the list of all the archive images with their metadata",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,20 +28,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "dataset"
+                    "archive"
                 ],
-                "summary": "return dataset info",
+                "summary": "Return a list of archive images",
                 "responses": {
                     "200": {
-                        "description": "The dataset info",
+                        "description": "The list of archive images",
                         "schema": {
-                            "$ref": "#/definitions/models.Dataset"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Archive"
+                            }
                         }
                     },
                     "500": {
                         "description": "An error occurred",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorInternalServerError"
+                            "$ref": "#/definitions/models.ErrorResponseModel"
                         }
                     }
                 }
@@ -49,116 +52,59 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Dataset": {
+        "models.Archive": {
             "type": "object",
             "properties": {
-                "badger": {
-                    "type": "string"
+                "cam": {
+                    "type": "string",
+                    "example": "CAM5"
                 },
-                "buzzard": {
-                    "type": "string"
+                "date": {
+                    "type": "string",
+                    "example": "2021-06-01 22:47:09"
                 },
-                "camera_1_coordinates": {
-                    "type": "string"
+                "id": {
+                    "type": "string",
+                    "example": "d38a0ec061a460466c253efe9a62cb14"
                 },
-                "camera_2_coordinates": {
-                    "type": "string"
+                "image_name": {
+                    "type": "string",
+                    "example": "TF_ACULEI_01062021-2741.jpg"
                 },
-                "camera_3_coordinates": {
-                    "type": "string"
+                "moon_phase": {
+                    "type": "string",
+                    "example": "Waning Crescent"
                 },
-                "camera_4_coordinates": {
-                    "type": "string"
+                "predicted_animal": {
+                    "type": "string",
+                    "example": "fox"
                 },
-                "camera_5_coordinates": {
-                    "type": "string"
-                },
-                "camera_6_coordinates": {
-                    "type": "string"
-                },
-                "camera_7_coordinates": {
-                    "type": "string"
-                },
-                "cat": {
-                    "type": "string"
-                },
-                "deer": {
-                    "type": "string"
-                },
-                "fox": {
-                    "type": "string"
-                },
-                "hare": {
-                    "type": "string"
-                },
-                "heron": {
-                    "type": "string"
-                },
-                "horse": {
-                    "type": "string"
-                },
-                "mallard": {
-                    "type": "string"
-                },
-                "marten": {
-                    "type": "string"
-                },
-                "photos_autumn": {
-                    "type": "string"
-                },
-                "photos_camera_1": {
-                    "type": "string"
-                },
-                "photos_camera_2": {
-                    "type": "string"
-                },
-                "photos_camera_3": {
-                    "type": "string"
-                },
-                "photos_camera_4": {
-                    "type": "string"
-                },
-                "photos_camera_5": {
-                    "type": "string"
-                },
-                "photos_camera_6": {
-                    "type": "string"
-                },
-                "photos_camera_7": {
-                    "type": "string"
-                },
-                "photos_spring": {
-                    "type": "string"
-                },
-                "photos_summer": {
-                    "type": "string"
-                },
-                "photos_winter": {
-                    "type": "string"
-                },
-                "porcupine": {
-                    "type": "string"
-                },
-                "squirrel": {
-                    "type": "string"
-                },
-                "total_records": {
-                    "type": "string"
-                },
-                "wild_boar": {
-                    "type": "string"
-                },
-                "wolf": {
-                    "type": "string"
+                "temperature": {
+                    "type": "number",
+                    "example": 12
                 }
             }
         },
-        "models.ErrorInternalServerError": {
+        "models.ErrorResponseModel": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "internal server error"
+                    "example": "invalid"
+                },
+                "param": {
+                    "type": "string",
+                    "example": "param_name"
+                },
+                "params": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "param1",
+                        "param2"
+                    ]
                 }
             }
         }
@@ -172,7 +118,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "aculei-be",
-	Description:      "The purpose of this microservice is to serve aculei.xyz",
+	Description:      "Live to serve aculei.xyz",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/micheledinelli/aculei-be/api/dataset"
+	"github.com/micheledinelli/aculei-be/api/archive"
 	"github.com/micheledinelli/aculei-be/models"
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
@@ -16,12 +16,12 @@ import (
 type Server struct {
 	engine         *gin.Engine
 	configuration  models.Configuration
-	datasetService *dataset.Service
+	archiveService *archive.Service
 }
 
 func NewServer(
 	configuration models.Configuration,
-	datasetService *dataset.Service,
+	archiveService *archive.Service,
 ) *Server {
 	engine := gin.Default()
 	engine.Use(cors.New(cors.Config{
@@ -34,7 +34,7 @@ func NewServer(
 	server := &Server{
 		engine:         engine,
 		configuration:  configuration,
-		datasetService: datasetService,
+		archiveService: archiveService,
 	}
 
 	server.setupRoutes()
@@ -54,10 +54,10 @@ func (s *Server) setupRoutes() {
 		// InternalRoute:        internalRoute,
 	}
 
-	dataset.InjectRoutes(routes, s.configuration, s.datasetService)
+	archive.InjectRoutes(routes, s.configuration, s.archiveService)
 
 	if s.configuration.Environment == models.Development {
-		log.Info().Msgf("Enable swagger on http://%s:%d/swagger/index.html", s.configuration.HTTPHost, s.configuration.HTTPPort)
+		log.Info().Msgf("Enabled swagger on http://%s:%d/swagger/index.html", s.configuration.HTTPHost, s.configuration.HTTPPort)
 		s.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 }

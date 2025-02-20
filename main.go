@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/micheledinelli/aculei-be/api"
-	"github.com/micheledinelli/aculei-be/api/dataset"
+	"github.com/micheledinelli/aculei-be/api/archive"
 	"github.com/micheledinelli/aculei-be/db"
 	_ "github.com/micheledinelli/aculei-be/docs"
 	"github.com/micheledinelli/aculei-be/models"
@@ -21,6 +21,7 @@ import (
 
 func main() {
 	var err error
+	println("Starting server")
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -28,14 +29,18 @@ func main() {
 
 	configuration := models.NewConfiguration()
 
-	database, err := db.NewDb(ctx, configuration)
-	repository := database.InitRepositories()
+	mongo, err := db.InitDatabase(ctx, configuration.DB.MongoUri)
+	if err != nil {
+		os.Exit(1)
+	}
 
-	datasetService := dataset.NewService(configuration, repository)
+	repos := mongo.InitRepositories()
+
+	archiveService := archive.NewService(configuration, mongo, &repos.Archive)
 
 	if err = api.NewServer(
 		configuration,
-		datasetService,
+		archiveService,
 	).Listen(); err != nil {
 		os.Exit(1)
 	}
