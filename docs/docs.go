@@ -20,7 +20,7 @@ const docTemplate = `{
     "paths": {
         "/v1/archive": {
             "get": {
-                "description": "Return the list of all the archive images with their metadata",
+                "description": "Return the list of all the archive images with their metadata. The response is paginated.",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,11 +30,11 @@ const docTemplate = `{
                 "tags": [
                     "archive"
                 ],
-                "summary": "Return a list of archive images",
+                "summary": "Returns a paginated response with the list of archive images",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "page index starting from 1",
+                        "description": "page index starting from 0",
                         "name": "page",
                         "in": "query"
                     },
@@ -160,6 +160,9 @@ const docTemplate = `{
         "models.PaginatedResponseModel-models_AculeiImage": {
             "type": "object",
             "properties": {
+                "count": {
+                    "type": "integer"
+                },
                 "data": {
                     "type": "array",
                     "items": {
@@ -173,6 +176,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "size": {
+                    "type": "integer"
+                },
+                "total": {
                     "type": "integer"
                 }
             }
