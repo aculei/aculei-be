@@ -98,6 +98,35 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/experience/random": {
+            "get": {
+                "description": "Returns a random image. Randomness is achieved using sample aggregation in MongoDB.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "experience"
+                ],
+                "summary": "Returns a random image to be displayed in the experience page",
+                "responses": {
+                    "200": {
+                        "description": "The random image",
+                        "schema": {
+                            "$ref": "#/definitions/models.AculeiImage"
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

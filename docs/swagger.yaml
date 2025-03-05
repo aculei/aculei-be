@@ -120,6 +120,26 @@ paths:
       summary: Returns a single archive image
       tags:
       - archive
+  /v1/experience/random:
+    get:
+      consumes:
+      - application/json
+      description: Returns a random image. Randomness is achieved using sample aggregation
+        in MongoDB.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The random image
+          schema:
+            $ref: '#/definitions/models.AculeiImage'
+        "500":
+          description: An error occurred
+          schema:
+            $ref: '#/definitions/models.ErrorResponseModel'
+      summary: Returns a random image to be displayed in the experience page
+      tags:
+      - experience
 schemes:
 - http
 - https
