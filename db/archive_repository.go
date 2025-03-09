@@ -76,11 +76,11 @@ func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, imageId string)
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
 
-	var aculeiImage models.AculeiImage
+	var aculeiImage *models.AculeiImage
 
-	if err := res.Decode(&aculeiImage); err != nil {
+	if err := res.Decode(aculeiImage); err != nil {
 		return nil, fmt.Errorf("error decoding archive image: %w", err)
 	}
 
-	return &aculeiImage, nil
+	return aculeiImage, nil
 }
