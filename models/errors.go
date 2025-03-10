@@ -5,9 +5,7 @@ import "errors"
 var ErrorInternalServerError = errors.New("internal server error")
 
 type ErrorResponseModel struct {
-	Message string   `json:"message" example:"invalid"`
-	Param   string   `json:"param,omitempty" example:"param_name"`
-	Params  []string `json:"params" example:"param1,param2"`
+	Message string `json:"message" example:"invalid"`
 }
 
 var ErrorInternalServerErrorResponseModel ErrorResponseModel = ErrorResponseModel{

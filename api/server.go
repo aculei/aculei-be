@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/micheledinelli/aculei-be/api/archive"
 	"github.com/micheledinelli/aculei-be/api/experience"
+	"github.com/micheledinelli/aculei-be/api/filters"
 	"github.com/micheledinelli/aculei-be/models"
 	"github.com/rs/zerolog/log"
 	swaggerFiles "github.com/swaggo/files"
@@ -19,12 +20,14 @@ type Server struct {
 	configuration     models.Configuration
 	archiveService    *archive.Service
 	experienceService *experience.Service
+	filtersService    *filters.Service
 }
 
 func NewServer(
 	configuration models.Configuration,
 	archiveService *archive.Service,
 	experienceService *experience.Service,
+	filtersService *filters.Service,
 ) *Server {
 	engine := gin.Default()
 	engine.Use(cors.New(cors.Config{
@@ -39,6 +42,7 @@ func NewServer(
 		configuration:     configuration,
 		archiveService:    archiveService,
 		experienceService: experienceService,
+		filtersService:    filtersService,
 	}
 
 	server.setupRoutes()
@@ -60,6 +64,7 @@ func (s *Server) setupRoutes() {
 
 	archive.InjectRoutes(routes, s.configuration, s.archiveService)
 	experience.InjectRoutes(routes, s.configuration, s.experienceService)
+	filters.InjectRoutes(routes, s.configuration, s.filtersService)
 
 	if s.configuration.Environment == models.Development {
 		log.Info().Msgf("Enabled swagger on http://%s:%d/swagger/index.html", s.configuration.HTTPHost, s.configuration.HTTPPort)

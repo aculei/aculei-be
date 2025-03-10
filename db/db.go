@@ -45,13 +45,16 @@ func InitDatabase(ctx context.Context, mongoUri string) (*Mongo, error) {
 type DBRepository struct {
 	Archive    ArchiveRepository
 	Experience ExperienceRepository
+	Filters    FiltersRepository
 }
 
 func (db *Mongo) InitRepositories() *DBRepository {
 	archiveRepo := NewArchiveRepository(db)
 	experienceRepo := NewExperienceRepository(db)
+	filtersRepo := NewFiltersRepository(db)
 	return &DBRepository{
 		Archive:    *archiveRepo,
 		Experience: *experienceRepo,
+		Filters:    *filtersRepo,
 	}
 }

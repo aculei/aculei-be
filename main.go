@@ -7,6 +7,7 @@ import (
 	"github.com/micheledinelli/aculei-be/api"
 	"github.com/micheledinelli/aculei-be/api/archive"
 	"github.com/micheledinelli/aculei-be/api/experience"
+	"github.com/micheledinelli/aculei-be/api/filters"
 	"github.com/micheledinelli/aculei-be/db"
 	_ "github.com/micheledinelli/aculei-be/docs"
 	"github.com/micheledinelli/aculei-be/models"
@@ -39,11 +40,13 @@ func main() {
 
 	archiveService := archive.NewService(configuration, mongo, &repos.Archive)
 	experienceService := experience.NewService(configuration, mongo, &repos.Experience)
+	filtersService := filters.NewService(configuration, mongo, &repos.Filters)
 
 	if err = api.NewServer(
 		configuration,
 		archiveService,
 		experienceService,
+		filtersService,
 	).Listen(); err != nil {
 		os.Exit(1)
 	}

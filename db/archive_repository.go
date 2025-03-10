@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 
 	_ "embed"
 
@@ -34,28 +33,22 @@ func (r *ArchiveRepository) GetArchiveList(
 
 	cursor, err := coll.Find(ctx, bson.D{}, findOptions)
 	if err != nil {
-		return nil, fmt.Errorf("error getting archive list: %w", err)
+		return nil, err
 	}
 	defer cursor.Close(ctx)
 
 	for cursor.Next(ctx) {
-		var res bson.M
+		var acueliImage models.AculeiImage
 
-		if err := cursor.Decode(&res); err != nil {
-			return nil, fmt.Errorf("error decoding archive list: %w", err)
+		if err := cursor.Decode(&acueliImage); err != nil {
+			return nil, err
 		}
 
-		archive := models.AculeiImage{}
-		archive.Id = res["id"].(string)
-		archive.Cam = res["cam"].(string)
-		archive.PredictedAnimal = res["predicted_animal"].(string)
-		archive.ImageName = res["image_name"].(string)
-
-		archiveList = append(archiveList, archive)
+		archiveList = append(archiveList, acueliImage)
 	}
 
 	if err := cursor.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating archive list: %w", err)
+		return nil, err
 	}
 
 	return &archiveList, nil
@@ -66,7 +59,7 @@ func (r *ArchiveRepository) GetArchiveListCount(ctx context.Context) (int, error
 
 	count, err := coll.CountDocuments(ctx, bson.D{})
 	if err != nil {
-		return 0, fmt.Errorf("error counting archive list: %w", err)
+		return 0, err
 	}
 
 	return int(count), nil
@@ -76,11 +69,11 @@ func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, imageId string)
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
 
-	var aculeiImage *models.AculeiImage
+	var aculeiImage models.AculeiImage
 
-	if err := res.Decode(aculeiImage); err != nil {
-		return nil, fmt.Errorf("error decoding archive image: %w", err)
+	if err := res.Decode(&aculeiImage); err != nil {
+		return nil, err
 	}
 
-	return aculeiImage, nil
+	return &aculeiImage, nil
 }

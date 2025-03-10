@@ -127,6 +127,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/filters": {
+            "get": {
+                "description": "Returns the list of available filters",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filters"
+                ],
+                "summary": "Returns the list of available filters",
+                "responses": {
+                    "200": {
+                        "description": "The list of available filters",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Filter"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -134,32 +166,25 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "cam": {
-                    "type": "string",
-                    "example": "CAM5"
+                    "type": "string"
                 },
                 "date": {
-                    "type": "string",
-                    "example": "2021-06-01 22:47:09"
+                    "type": "string"
                 },
                 "id": {
-                    "type": "string",
-                    "example": "d38a0ec061a460466c253efe9a62cb14"
+                    "type": "string"
                 },
                 "image_name": {
-                    "type": "string",
-                    "example": "TF_ACULEI_01062021-2741.jpg"
+                    "type": "string"
                 },
                 "moon_phase": {
-                    "type": "string",
-                    "example": "Waning Crescent"
+                    "type": "string"
                 },
                 "predicted_animal": {
-                    "type": "string",
-                    "example": "fox"
+                    "type": "string"
                 },
                 "temperature": {
-                    "type": "number",
-                    "example": 12
+                    "type": "number"
                 }
             }
         },
@@ -169,20 +194,20 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "invalid"
+                }
+            }
+        },
+        "models.Filter": {
+            "type": "object",
+            "properties": {
+                "from": {},
+                "name": {
+                    "type": "string"
                 },
-                "param": {
-                    "type": "string",
-                    "example": "param_name"
-                },
-                "params": {
+                "to": {},
+                "values": {
                     "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "param1",
-                        "param2"
-                    ]
+                    "items": {}
                 }
             }
         },

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -22,13 +21,12 @@ type Paginator struct {
 func NewPaginator(page string, size string, total int) *Paginator {
 	pageInt, err := strconv.Atoi(page)
 	if err != nil {
-		fmt.Printf("Error converting page to int: %v\n", err)
-		pageInt = 1
+		pageInt = 0
 	}
 
 	countInt, err := strconv.Atoi(size)
 	if err != nil {
-		countInt = 10
+		countInt = 99999
 	}
 
 	return &Paginator{
