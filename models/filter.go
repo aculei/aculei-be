@@ -26,10 +26,10 @@ type FilterGroup struct {
 func BuildFilterGroup(ctx *gin.Context) (*FilterGroup, error) {
 	f := FilterGroup{}
 
-	animals := ctx.QueryArray("animals")
-	moonPhases := ctx.QueryArray("moon_phases")
-	temperatures := ctx.QueryArray("temperatures")
-	dates := ctx.QueryArray("dates")
+	animals := ctx.QueryArray("animal")
+	moonPhases := ctx.QueryArray("moon_phase")
+	temperatures := ctx.QueryArray("temperature")
+	dates := ctx.QueryArray("date")
 
 	if len(animals) > 0 {
 		f.Animals = &animals
@@ -76,12 +76,19 @@ func (f *FilterGroup) GenerateFilters() (bson.D, error) {
 		if len(*f.Temperatures) == 1 {
 			filter = append(filter, bson.E{Key: "temperature", Value: bson.D{{Key: "$eq", Value: (*f.Temperatures)[0]}}})
 		} else {
-			if (*f.Temperatures)[0] >= (*f.Temperatures)[1] {
-				return bson.D{}, ErrroInvalidFromToTemperature
+			var lowerTemp float64
+			var upperTemp float64
+
+			if (*f.Temperatures)[0] > (*f.Temperatures)[1] {
+				lowerTemp = (*f.Temperatures)[1]
+				upperTemp = (*f.Temperatures)[0]
+			} else {
+				lowerTemp = (*f.Temperatures)[0]
+				upperTemp = (*f.Temperatures)[1]
 			}
 
-			filter = append(filter, bson.E{Key: "temperature", Value: bson.D{{Key: "$gt", Value: (*f.Temperatures)[0]}}})
-			filter = append(filter, bson.E{Key: "temperature", Value: bson.D{{Key: "$lt", Value: (*f.Temperatures)[1]}}})
+			filter = append(filter, bson.E{Key: "temperature", Value: bson.D{{Key: "$gte", Value: lowerTemp}}})
+			filter = append(filter, bson.E{Key: "temperature", Value: bson.D{{Key: "$lte", Value: upperTemp}}})
 		}
 	}
 

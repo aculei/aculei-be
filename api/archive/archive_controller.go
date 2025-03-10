@@ -68,10 +68,10 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Router /v1/archive [get]
 // @Param page query int false "page index starting from 0"
 // @Param size query int false "number of items per page"
-// @Param animals query 		[]string false "list of animals" collectionFormat(multi)
-// @Param moon_phases query 	[]string false "list of moon phases" collectionFormat(multi)
-// @Param temperatures query 	[]string false "list of temperatures" collectionFormat(multi)
-// @Param dates query 			[]string false "list of dates" collectionFormat(multi)
+// @Param animal query 			[]string false "list of animals" collectionFormat(multi)
+// @Param moon_phase query 		[]string false "list of moon phases" collectionFormat(multi)
+// @Param temperature query 	[]int false "list of temperatures" collectionFormat(multi)
+// @Param date query 			[]string false "list of dates" collectionFormat(multi)
 // @Summary Returns a paginated response with the list of archive images
 // @Description Return the list of all the archive images with their metadata. The response is paginated.
 // @Accept json

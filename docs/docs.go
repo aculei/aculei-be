@@ -51,7 +51,7 @@ const docTemplate = `{
                         },
                         "collectionFormat": "multi",
                         "description": "list of animals",
-                        "name": "animals",
+                        "name": "animal",
                         "in": "query"
                     },
                     {
@@ -61,17 +61,17 @@ const docTemplate = `{
                         },
                         "collectionFormat": "multi",
                         "description": "list of moon phases",
-                        "name": "moon_phases",
+                        "name": "moon_phase",
                         "in": "query"
                     },
                     {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "integer"
                         },
                         "collectionFormat": "multi",
                         "description": "list of temperatures",
-                        "name": "temperatures",
+                        "name": "temperature",
                         "in": "query"
                     },
                     {
@@ -81,7 +81,7 @@ const docTemplate = `{
                         },
                         "collectionFormat": "multi",
                         "description": "list of dates",
-                        "name": "dates",
+                        "name": "date",
                         "in": "query"
                     }
                 ],

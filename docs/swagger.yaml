@@ -82,28 +82,28 @@ paths:
         in: query
         items:
           type: string
-        name: animals
+        name: animal
         type: array
       - collectionFormat: multi
         description: list of moon phases
         in: query
         items:
           type: string
-        name: moon_phases
+        name: moon_phase
         type: array
       - collectionFormat: multi
         description: list of temperatures
         in: query
         items:
-          type: string
-        name: temperatures
+          type: integer
+        name: temperature
         type: array
       - collectionFormat: multi
         description: list of dates
         in: query
         items:
           type: string
-        name: dates
+        name: date
         type: array
       produces:
       - application/json
