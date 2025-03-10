@@ -20,10 +20,14 @@ func NewArchiveRepository(mongo *Mongo) *ArchiveRepository {
 	}
 }
 
-func (r *ArchiveRepository) GetArchiveList(
-	ctx context.Context,
-	paginator models.Paginator) (*[]models.AculeiImage, error) {
+func (r *ArchiveRepository) GetArchiveList(ctx context.Context, paginator models.Paginator, filterGroup models.FilterGroup) (
+	*[]models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
+
+	filters, err := filterGroup.GenerateFilters()
+	if err != nil {
+		return nil, err
+	}
 
 	var archiveList []models.AculeiImage
 
@@ -31,7 +35,7 @@ func (r *ArchiveRepository) GetArchiveList(
 	findOptions.SetLimit(int64(paginator.Size))
 	findOptions.SetSkip(int64(paginator.Size * paginator.Page))
 
-	cursor, err := coll.Find(ctx, bson.D{}, findOptions)
+	cursor, err := coll.Find(ctx, filters, findOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -54,10 +58,12 @@ func (r *ArchiveRepository) GetArchiveList(
 	return &archiveList, nil
 }
 
-func (r *ArchiveRepository) GetArchiveListCount(ctx context.Context) (int, error) {
+func (r *ArchiveRepository) GetArchiveListCount(ctx context.Context, filterGroup models.FilterGroup) (int, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
-	count, err := coll.CountDocuments(ctx, bson.D{})
+	filters, _ := filterGroup.GenerateFilters()
+
+	count, err := coll.CountDocuments(ctx, filters)
 	if err != nil {
 		return 0, err
 	}

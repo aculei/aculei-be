@@ -3,8 +3,10 @@ package models
 import (
 	"errors"
 	"math"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type AculeiImage struct {
@@ -82,6 +84,21 @@ func (a *AculeiImage) UnmarshalBSON(data []byte) error {
 		switch v := date.(type) {
 		case string:
 			a.Date = &v
+		case time.Time:
+			t := v.Format(time.RFC3339)
+			a.Date = &t
+		case int64:
+			t := time.Unix(v/1000, (v%1000)*int64(time.Millisecond))
+			tStr := t.Format(time.RFC3339)
+			a.Date = &tStr
+		case float64:
+			t := time.Unix(int64(v)/1000, (int64(v)%1000)*int64(time.Millisecond))
+			tStr := t.Format(time.RFC3339)
+			a.Date = &tStr
+		case primitive.DateTime:
+			t := v.Time()
+			tStr := t.Format(time.RFC3339)
+			a.Date = &tStr
 		default:
 			a.Date = nil
 		}

@@ -68,11 +68,16 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Router /v1/archive [get]
 // @Param page query int false "page index starting from 0"
 // @Param size query int false "number of items per page"
+// @Param animals query 		[]string false "list of animals" collectionFormat(multi)
+// @Param moon_phases query 	[]string false "list of moon phases" collectionFormat(multi)
+// @Param temperatures query 	[]string false "list of temperatures" collectionFormat(multi)
+// @Param dates query 			[]string false "list of dates" collectionFormat(multi)
 // @Summary Returns a paginated response with the list of archive images
 // @Description Return the list of all the archive images with their metadata. The response is paginated.
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.PaginatedResponseModel[models.AculeiImage] "The list of archive images"
+// @Success 200 {object} models.PaginatedResponseModel[models.AculeiImage] "The list of archive images with pagination metadata"
+// @Failure 400 {object} models.ErrorResponseModel "Bad request"
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -83,7 +88,14 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 		page := ctx.Query("page")
 		size := ctx.Query("size")
 
-		archiveCount, err = c.archiveService.GetArchiveListCount(ctx)
+		filterGroup, err := models.BuildFilterGroup(ctx)
+		if err != nil {
+			c.logger.Error().Err(err).Msg("Error building filters")
+			ctx.JSON(400, models.NewBadRequest(err.Error()))
+			return
+		}
+
+		archiveCount, err = c.archiveService.GetArchiveListCount(ctx, *filterGroup)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive list count")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
@@ -92,7 +104,7 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 
 		paginator := models.NewPaginator(page, size, archiveCount)
 
-		archiveList, err = c.archiveService.GetArchiveList(ctx, *paginator)
+		archiveList, err = c.archiveService.GetArchiveList(ctx, *paginator, *filterGroup)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive list")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)

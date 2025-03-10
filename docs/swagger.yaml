@@ -19,6 +19,9 @@ definitions:
     type: object
   models.ErrorResponseModel:
     properties:
+      detail:
+        example: detail
+        type: string
       message:
         example: invalid
         type: string
@@ -74,13 +77,45 @@ paths:
         in: query
         name: size
         type: integer
+      - collectionFormat: multi
+        description: list of animals
+        in: query
+        items:
+          type: string
+        name: animals
+        type: array
+      - collectionFormat: multi
+        description: list of moon phases
+        in: query
+        items:
+          type: string
+        name: moon_phases
+        type: array
+      - collectionFormat: multi
+        description: list of temperatures
+        in: query
+        items:
+          type: string
+        name: temperatures
+        type: array
+      - collectionFormat: multi
+        description: list of dates
+        in: query
+        items:
+          type: string
+        name: dates
+        type: array
       produces:
       - application/json
       responses:
         "200":
-          description: The list of archive images
+          description: The list of archive images with pagination metadata
           schema:
             $ref: '#/definitions/models.PaginatedResponseModel-models_AculeiImage'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/models.ErrorResponseModel'
         "500":
           description: An error occurred
           schema:

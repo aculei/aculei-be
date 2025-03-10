@@ -43,13 +43,59 @@ const docTemplate = `{
                         "description": "number of items per page",
                         "name": "size",
                         "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "list of animals",
+                        "name": "animals",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "list of moon phases",
+                        "name": "moon_phases",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "list of temperatures",
+                        "name": "temperatures",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "list of dates",
+                        "name": "dates",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "The list of archive images",
+                        "description": "The list of archive images with pagination metadata",
                         "schema": {
                             "$ref": "#/definitions/models.PaginatedResponseModel-models_AculeiImage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
                         }
                     },
                     "500": {
@@ -191,6 +237,10 @@ const docTemplate = `{
         "models.ErrorResponseModel": {
             "type": "object",
             "properties": {
+                "detail": {
+                    "type": "string",
+                    "example": "detail"
+                },
                 "message": {
                     "type": "string",
                     "example": "invalid"

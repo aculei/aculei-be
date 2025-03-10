@@ -5,12 +5,12 @@ import (
 )
 
 type PaginatedResponseModel[T any] struct {
+	Data  []T  `json:"data"`
 	Page  int  `json:"page"`
 	Size  int  `json:"size"`
-	Next  *int `json:"next"`
-	Data  []T  `json:"data"`
-	Total int  `json:"total"`
 	Count int  `json:"count"`
+	Total int  `json:"total"`
+	Next  *int `json:"next"`
 }
 
 type Paginator struct {
