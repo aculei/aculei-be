@@ -72,7 +72,7 @@ func (r *FiltersRepository) GetAvailableFilters(ctx context.Context) (*[]models.
 		}
 
 		if aculeiImage.Date != nil {
-			date, err := time.Parse("2006-01-02 15:04:05", *aculeiImage.Date)
+			date, err := time.Parse(time.RFC3339, *aculeiImage.Date)
 			if err != nil {
 				return nil, fmt.Errorf("error parsing date: %w", err)
 			}
