@@ -25,6 +25,6 @@ func NewService(
 	}
 }
 
-func (s *Service) GetAvailableFilters(ctx context.Context) (*[]models.Filter, error) {
-	return s.filtersRepo.GetAvailableFilters(ctx)
+func (s *Service) GetFilters(ctx context.Context) (*[]models.Filter, error) {
+	return s.filtersRepo.GetFilters(ctx)
 }

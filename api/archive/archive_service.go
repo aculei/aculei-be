@@ -25,15 +25,14 @@ func NewService(
 	}
 }
 
-func (s *Service) GetArchiveList(ctx context.Context, paginator models.Paginator, filterGroup models.FilterGroup) (
-	*[]models.AculeiImage, error) {
-	return s.archiveRepo.GetArchiveList(ctx, paginator, filterGroup)
+func (s *Service) GetArchive(ctx context.Context, p models.Paginator, fg models.FilterGroup) (*[]models.AculeiImage, error) {
+	return s.archiveRepo.GetArchive(ctx, p, fg)
 }
 
-func (s *Service) GetArchiveListCount(ctx context.Context, filterGroup models.FilterGroup) (int, error) {
-	return s.archiveRepo.GetArchiveListCount(ctx, filterGroup)
+func (s *Service) GetArchiveCount(ctx context.Context, fg models.FilterGroup) (int, error) {
+	return s.archiveRepo.GetArchiveCount(ctx, fg)
 }
 
-func (s *Service) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
-	return s.archiveRepo.GetArchiveImage(ctx, imageId)
+func (s *Service) GetArchiveImage(ctx context.Context, id string) (*models.AculeiImage, error) {
+	return s.archiveRepo.GetArchiveImage(ctx, id)
 }

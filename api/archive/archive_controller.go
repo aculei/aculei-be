@@ -52,7 +52,7 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 	{
 		v1.GET(
 			"archive",
-			c.getArchiveList(),
+			c.getArchive(),
 		)
 
 		v1.GET(
@@ -62,7 +62,7 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 	}
 }
 
-// getArchiveList godoc
+// getArchive godoc
 // @Tags archive
 // @Schemes http
 // @Router /v1/archive [get]
@@ -79,23 +79,27 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Success 200 {object} models.PaginatedResponseModel[models.AculeiImage] "The list of archive images with pagination metadata"
 // @Failure 400 {object} models.ErrorResponseModel "Bad request"
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
-func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
+func (c *ArchiveController) getArchive() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var archiveList *[]models.AculeiImage
+		var archive *[]models.AculeiImage
 		var archiveCount int
 		var err error
 
 		page := ctx.Query("page")
 		size := ctx.Query("size")
 
-		filterGroup, err := models.BuildFilterGroup(ctx)
+		fg, err := models.BuildFilterGroup(ctx)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error building filters")
-			ctx.JSON(400, models.NewBadRequest(err.Error()))
+			if _, ok := err.(*models.ErrorFilter); ok {
+				ctx.JSON(400, models.NewBadRequest(err.Error()))
+			}
+
+			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
-		archiveCount, err = c.archiveService.GetArchiveListCount(ctx, *filterGroup)
+		archiveCount, err = c.archiveService.GetArchiveCount(ctx, *fg)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive list count")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
@@ -104,9 +108,14 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 
 		paginator := models.NewPaginator(page, size, archiveCount)
 
-		archiveList, err = c.archiveService.GetArchiveList(ctx, *paginator, *filterGroup)
+		archive, err = c.archiveService.GetArchive(ctx, *paginator, *fg)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive list")
+			if _, ok := err.(*models.ErrorFilter); ok {
+				ctx.JSON(400, models.NewBadRequest(err.Error()))
+				return
+			}
+
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
@@ -121,9 +130,9 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 			Page:  paginator.Page,
 			Size:  paginator.Size,
 			Next:  next,
-			Data:  *archiveList,
+			Data:  *archive,
 			Total: archiveCount,
-			Count: len(*archiveList),
+			Count: len(*archive),
 		}
 
 		ctx.JSON(200, response)
@@ -143,18 +152,18 @@ func (c *ArchiveController) getArchiveList() gin.HandlerFunc {
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ArchiveController) getArchiveImage() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var archiveImage *models.AculeiImage
+		var img *models.AculeiImage
 		var err error
 
 		id := ctx.Param("id")
 
-		archiveImage, err = c.archiveService.GetArchiveImage(ctx, id)
+		img, err = c.archiveService.GetArchiveImage(ctx, id)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting archive image")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
-		ctx.JSON(200, archiveImage)
+		ctx.JSON(200, img)
 	}
 }

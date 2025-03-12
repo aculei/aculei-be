@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"strconv"
 	"time"
 
@@ -95,7 +94,7 @@ func (f *FilterGroup) GenerateFilters() (bson.D, error) {
 
 	if f.Dates != nil {
 		if len(*f.Dates) != 2 {
-			return bson.D{}, errors.New("invalid date range in filters")
+			return bson.D{}, ErrorDatesNotTwo
 		}
 
 		datePattern := "02/01/2006"
@@ -103,7 +102,7 @@ func (f *FilterGroup) GenerateFilters() (bson.D, error) {
 		date2, err2 := time.Parse(datePattern, (*f.Dates)[1])
 
 		if err1 != nil || err2 != nil {
-			return bson.D{}, errors.New("invalid date format in filters")
+			return bson.D{}, ErrorDateFormat
 		}
 
 		fromDate := date1

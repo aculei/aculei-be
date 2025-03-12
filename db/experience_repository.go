@@ -28,30 +28,30 @@ func (r *ExperienceRepository) GetRandomExperienceImage(ctx context.Context) (*m
 
 	cursor, err := coll.Aggregate(ctx, pipeline)
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving random image: %w", err)
+		return nil, models.ErrorDatabaseAggregate
 	}
 	defer cursor.Close(ctx)
 
-	var aculeiImage models.AculeiImage
+	var img models.AculeiImage
 	if cursor.Next(ctx) {
-		if err := cursor.Decode(&aculeiImage); err != nil {
-			return nil, fmt.Errorf("error decoding archive image: %w", err)
+		if err := cursor.Decode(&img); err != nil {
+			return nil, models.ErrorDatabaseImageDecoder
 		}
-		return &aculeiImage, nil
+		return &img, nil
 	}
 
 	return nil, fmt.Errorf("no image found")
 }
 
-func (r *ExperienceRepository) GetExperienceImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+func (r *ExperienceRepository) GetExperienceImage(ctx context.Context, id string) (*models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(experienceCollection)
-	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
+	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: id}})
 
-	var aculeiImage models.AculeiImage
+	var img models.AculeiImage
 
-	if err := res.Decode(&aculeiImage); err != nil {
-		return nil, err
+	if err := res.Decode(&img); err != nil {
+		return nil, models.ErrorDatabaseImageDecoder
 	}
 
-	return &aculeiImage, nil
+	return &img, nil
 }

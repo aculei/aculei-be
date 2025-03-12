@@ -72,9 +72,9 @@ func (c *FiltersController) getFilters() gin.HandlerFunc {
 		var filters *[]models.Filter
 		var err error
 
-		filters, err = c.filtersService.GetAvailableFilters(ctx)
+		filters, err = c.filtersService.GetFilters(ctx)
 		if err != nil {
-			c.logger.Error().Err(err).Msg("Error getting available filters")
+			c.logger.Error().Err(err).Msg("Error getting filters")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}

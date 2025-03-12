@@ -21,12 +21,12 @@ func NewFiltersRepository(mongo *Mongo) *FiltersRepository {
 	}
 }
 
-func (r *FiltersRepository) GetAvailableFilters(ctx context.Context) (*[]models.Filter, error) {
+func (r *FiltersRepository) GetFilters(ctx context.Context) (*[]models.Filter, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
 	cursor, err := coll.Find(ctx, bson.D{})
 	if err != nil {
-		return nil, fmt.Errorf("error getting archive list: %w", err)
+		return nil, models.ErrorDatabaseFind
 	}
 	defer cursor.Close(ctx)
 
@@ -39,40 +39,40 @@ func (r *FiltersRepository) GetAvailableFilters(ctx context.Context) (*[]models.
 	moonPhases := make(map[string]string)
 
 	for cursor.Next(ctx) {
-		var aculeiImage models.AculeiImage
+		var img models.AculeiImage
 
-		if err := cursor.Decode(&aculeiImage); err != nil {
-			return nil, fmt.Errorf("error decoding archive list: %w", err)
+		if err := cursor.Decode(&img); err != nil {
+			return nil, models.ErrorDatabaseImageDecoder
 		}
 
-		if _, ok := animals[aculeiImage.PredictedAnimal]; !ok {
-			animals[aculeiImage.PredictedAnimal] = aculeiImage.PredictedAnimal
+		if _, ok := animals[img.PredictedAnimal]; !ok {
+			animals[img.PredictedAnimal] = img.PredictedAnimal
 		}
 
-		if aculeiImage.Temperature != nil {
-			if *aculeiImage.Temperature > maxTemperature {
-				maxTemperature = *aculeiImage.Temperature
+		if img.Temperature != nil {
+			if *img.Temperature > maxTemperature {
+				maxTemperature = *img.Temperature
 			}
 
-			if *aculeiImage.Temperature < minTemperature {
-				minTemperature = *aculeiImage.Temperature
-			}
-		}
-
-		if aculeiImage.Cam != nil {
-			if _, ok := cameras[*aculeiImage.Cam]; !ok {
-				cameras[*aculeiImage.Cam] = *aculeiImage.Cam
+			if *img.Temperature < minTemperature {
+				minTemperature = *img.Temperature
 			}
 		}
 
-		if aculeiImage.MoonPhase != nil {
-			if _, ok := moonPhases[*aculeiImage.MoonPhase]; !ok {
-				moonPhases[*aculeiImage.MoonPhase] = *aculeiImage.MoonPhase
+		if img.Cam != nil {
+			if _, ok := cameras[*img.Cam]; !ok {
+				cameras[*img.Cam] = *img.Cam
 			}
 		}
 
-		if aculeiImage.Date != nil {
-			date, err := time.Parse(time.RFC3339, *aculeiImage.Date)
+		if img.MoonPhase != nil {
+			if _, ok := moonPhases[*img.MoonPhase]; !ok {
+				moonPhases[*img.MoonPhase] = *img.MoonPhase
+			}
+		}
+
+		if img.Date != nil {
+			date, err := time.Parse(time.RFC3339, *img.Date)
 			if err != nil {
 				return nil, fmt.Errorf("error parsing date: %w", err)
 			}
@@ -88,7 +88,7 @@ func (r *FiltersRepository) GetAvailableFilters(ctx context.Context) (*[]models.
 	}
 
 	if err := cursor.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating archive list: %w", err)
+		return nil, models.ErrorDatabaseCursor
 	}
 
 	animalsAvailable := make([]interface{}, 0, len(animals))

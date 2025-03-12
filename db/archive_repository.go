@@ -20,13 +20,15 @@ func NewArchiveRepository(mongo *Mongo) *ArchiveRepository {
 	}
 }
 
-func (r *ArchiveRepository) GetArchiveList(ctx context.Context, paginator models.Paginator, filterGroup models.FilterGroup) (
-	*[]models.AculeiImage, error) {
+func (r *ArchiveRepository) GetArchive(
+	ctx context.Context,
+	paginator models.Paginator,
+	fg models.FilterGroup) (*[]models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
-	filters, err := filterGroup.GenerateFilters()
+	filters, err := fg.GenerateFilters()
 	if err != nil {
-		return nil, err
+		return nil, models.NewErrorFilter(err.Error())
 	}
 
 	var archiveList []models.AculeiImage
@@ -37,7 +39,7 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context, paginator models
 
 	cursor, err := coll.Find(ctx, filters, findOptions)
 	if err != nil {
-		return nil, err
+		return nil, models.ErrorDatabaseFind
 	}
 	defer cursor.Close(ctx)
 
@@ -45,41 +47,41 @@ func (r *ArchiveRepository) GetArchiveList(ctx context.Context, paginator models
 		var acueliImage models.AculeiImage
 
 		if err := cursor.Decode(&acueliImage); err != nil {
-			return nil, err
+			return nil, models.ErrorDatabaseImageDecoder
 		}
 
 		archiveList = append(archiveList, acueliImage)
 	}
 
 	if err := cursor.Err(); err != nil {
-		return nil, err
+		return nil, models.ErrorDatabaseCursor
 	}
 
 	return &archiveList, nil
 }
 
-func (r *ArchiveRepository) GetArchiveListCount(ctx context.Context, filterGroup models.FilterGroup) (int, error) {
+func (r *ArchiveRepository) GetArchiveCount(ctx context.Context, fg models.FilterGroup) (int, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
 
-	filters, _ := filterGroup.GenerateFilters()
+	filters, _ := fg.GenerateFilters()
 
 	count, err := coll.CountDocuments(ctx, filters)
 	if err != nil {
-		return 0, err
+		return 0, models.ErrorDatabaseCount
 	}
 
 	return int(count), nil
 }
 
-func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+func (r *ArchiveRepository) GetArchiveImage(ctx context.Context, id string) (*models.AculeiImage, error) {
 	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
-	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
+	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: id}})
 
-	var aculeiImage models.AculeiImage
+	var img models.AculeiImage
 
-	if err := res.Decode(&aculeiImage); err != nil {
-		return nil, err
+	if err := res.Decode(&img); err != nil {
+		return nil, models.ErrorDatabaseImageDecoder
 	}
 
-	return &aculeiImage, nil
+	return &img, nil
 }

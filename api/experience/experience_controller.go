@@ -74,17 +74,17 @@ func (c *ExperienceController) injectUnAuthenticatedRoutes() {
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ExperienceController) getRandomExperienceImage() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var randomImage *models.AculeiImage
+		var img *models.AculeiImage
 		var err error
 
-		randomImage, err = c.experienceService.GetRandomExperienceImage(ctx)
+		img, err = c.experienceService.GetRandomExperienceImage(ctx)
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Error getting random image")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
-		ctx.JSON(200, randomImage)
+		ctx.JSON(200, img)
 	}
 }
 
@@ -101,18 +101,18 @@ func (c *ExperienceController) getRandomExperienceImage() gin.HandlerFunc {
 // @Failure 500 {object} models.ErrorResponseModel "An error occurred"
 func (c *ExperienceController) getExperienceImage() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var archiveImage *models.AculeiImage
+		var img *models.AculeiImage
 		var err error
 
 		id := ctx.Param("id")
 
-		archiveImage, err = c.experienceService.GetExperienceImage(ctx, id)
+		img, err = c.experienceService.GetExperienceImage(ctx, id)
 		if err != nil {
-			c.logger.Error().Err(err).Msg("Error getting archive image")
+			c.logger.Error().Err(err).Msg("Error getting experience image")
 			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
 			return
 		}
 
-		ctx.JSON(200, archiveImage)
+		ctx.JSON(200, img)
 	}
 }
