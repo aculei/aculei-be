@@ -148,6 +148,31 @@ paths:
       summary: Returns a single archive image
       tags:
       - archive
+  /v1/experience/image/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a single experience with its metadata
+      parameters:
+      - description: the experience image id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The experience image and its metadata
+          schema:
+            $ref: '#/definitions/models.AculeiImage'
+        "500":
+          description: An error occurred
+          schema:
+            $ref: '#/definitions/models.ErrorResponseModel'
+      summary: Returns a single experience image
+      tags:
+      - experience
   /v1/experience/random:
     get:
       consumes:

@@ -143,6 +143,44 @@
                 }
             }
         },
+        "/v1/experience/image/{id}": {
+            "get": {
+                "description": "Returns a single experience with its metadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "experience"
+                ],
+                "summary": "Returns a single experience image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the experience image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The experience image and its metadata",
+                        "schema": {
+                            "$ref": "#/definitions/models.AculeiImage"
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/experience/random": {
             "get": {
                 "description": "Returns a random image. Randomness is achieved using sample aggregation in MongoDB.",

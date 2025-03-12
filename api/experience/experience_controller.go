@@ -54,6 +54,11 @@ func (c *ExperienceController) injectUnAuthenticatedRoutes() {
 			"experience/random",
 			c.getRandomExperienceImage(),
 		)
+
+		v1.GET(
+			"experience/image/:id",
+			c.getExperienceImage(),
+		)
 	}
 }
 
@@ -80,5 +85,34 @@ func (c *ExperienceController) getRandomExperienceImage() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, randomImage)
+	}
+}
+
+// getExperienceImage godoc
+// @Tags experience
+// @Schemes http
+// @Router /v1/experience/image/{id} [get]
+// @Param id path string true "the experience image id"
+// @Summary Returns a single experience image
+// @Description Returns a single experience with its metadata
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.AculeiImage "The experience image and its metadata"
+// @Failure 500 {object} models.ErrorResponseModel "An error occurred"
+func (c *ExperienceController) getExperienceImage() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var archiveImage *models.AculeiImage
+		var err error
+
+		id := ctx.Param("id")
+
+		archiveImage, err = c.experienceService.GetExperienceImage(ctx, id)
+		if err != nil {
+			c.logger.Error().Err(err).Msg("Error getting archive image")
+			ctx.JSON(500, models.ErrorInternalServerErrorResponseModel)
+			return
+		}
+
+		ctx.JSON(200, archiveImage)
 	}
 }

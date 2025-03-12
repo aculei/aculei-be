@@ -21,7 +21,7 @@ func NewExperienceRepository(mongo *Mongo) *ExperienceRepository {
 }
 
 func (r *ExperienceRepository) GetRandomExperienceImage(ctx context.Context) (*models.AculeiImage, error) {
-	coll := r.mongo.Client.Database(dbName).Collection(archiveCollection)
+	coll := r.mongo.Client.Database(dbName).Collection(experienceCollection)
 	pipeline := bson.A{
 		bson.D{{Key: "$sample", Value: bson.D{{Key: "size", Value: 1}}}},
 	}
@@ -41,4 +41,17 @@ func (r *ExperienceRepository) GetRandomExperienceImage(ctx context.Context) (*m
 	}
 
 	return nil, fmt.Errorf("no image found")
+}
+
+func (r *ExperienceRepository) GetExperienceImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+	coll := r.mongo.Client.Database(dbName).Collection(experienceCollection)
+	res := coll.FindOne(ctx, bson.D{{Key: "id", Value: imageId}})
+
+	var aculeiImage models.AculeiImage
+
+	if err := res.Decode(&aculeiImage); err != nil {
+		return nil, err
+	}
+
+	return &aculeiImage, nil
 }

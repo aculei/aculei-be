@@ -11,6 +11,7 @@ import (
 
 const dbName = "aculei"
 const archiveCollection = "archive"
+const experienceCollection = "experience"
 
 type Mongo struct {
 	Client *mongo.Client

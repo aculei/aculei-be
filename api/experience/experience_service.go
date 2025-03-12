@@ -28,3 +28,7 @@ func NewService(
 func (s *Service) GetRandomExperienceImage(ctx context.Context) (*models.AculeiImage, error) {
 	return s.experienceRepo.GetRandomExperienceImage(ctx)
 }
+
+func (s *Service) GetExperienceImage(ctx context.Context, imageId string) (*models.AculeiImage, error) {
+	return s.experienceRepo.GetExperienceImage(ctx, imageId)
+}
