@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Filter struct {
@@ -93,32 +94,35 @@ func (f *FilterGroup) GenerateFilters() (bson.D, error) {
 	}
 
 	if f.Dates != nil {
-		if len(*f.Dates) == 1 {
-			parsedDate, err := time.Parse("2006-01-02", (*f.Dates)[0])
-			if err != nil {
-				return bson.D{}, errors.New("invalid date format in filters")
-			}
-			filter = append(filter, bson.E{Key: "date", Value: bson.D{{Key: "$eq", Value: parsedDate}}})
-		} else {
-			fromDate, err1 := time.Parse("2006-01-02", (*f.Dates)[0])
-			toDate, err2 := time.Parse("2006-01-02", (*f.Dates)[1])
-
-			if err1 != nil || err2 != nil {
-				return bson.D{}, errors.New("invalid date format in filters")
-			}
-
-			if fromDate.After(toDate) {
-				return bson.D{}, errors.New("invalid date range: from >= to")
-			}
-
-			filter = append(filter, bson.E{
-				Key: "date",
-				Value: bson.D{
-					{Key: "$gte", Value: fromDate},
-					{Key: "$lt", Value: toDate},
-				},
-			})
+		if len(*f.Dates) != 2 {
+			return bson.D{}, errors.New("invalid date range in filters")
 		}
+
+		datePattern := "02/01/2006"
+		date1, err1 := time.Parse(datePattern, (*f.Dates)[0])
+		date2, err2 := time.Parse(datePattern, (*f.Dates)[1])
+
+		if err1 != nil || err2 != nil {
+			return bson.D{}, errors.New("invalid date format in filters")
+		}
+
+		fromDate := date1
+		toDate := date2
+		if date1.After(date2) {
+			toDate = date1
+			fromDate = date2
+		}
+
+		mongoDateFrom := primitive.NewDateTimeFromTime(fromDate)
+		mongoDateTo := primitive.NewDateTimeFromTime(toDate)
+
+		filter = append(filter, bson.E{
+			Key: "date",
+			Value: bson.D{
+				{Key: "$gte", Value: mongoDateFrom},
+				{Key: "$lt", Value: mongoDateTo},
+			},
+		})
 	}
 
 	return filter, nil
