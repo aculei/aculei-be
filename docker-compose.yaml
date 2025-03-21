@@ -1,0 +1,7 @@
+services:
+  backend:
+    image: aculei-be:latest
+    container_name: aculei-be
+    ports:
+      - "8888:8888"
+    restart: on-failure
