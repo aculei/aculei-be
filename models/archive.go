@@ -10,13 +10,14 @@ import (
 )
 
 type AculeiImage struct {
-	Id              string   `bson:"id" json:"id"`
-	ImageName       string   `bson:"image_name" json:"image_name"`
-	PredictedAnimal string   `bson:"predicted_animal" json:"predicted_animal"`
-	MoonPhase       *string  `bson:"moon_phase,omitempty" json:"moon_phase"`
-	Temperature     *float64 `bson:"temperature,omitempty" json:"temperature"`
-	Date            *string  `bson:"date,omitempty" json:"date"`
-	Cam             *string  `bson:"cam,omitempty" json:"cam"`
+	Id              string   `bson:"id" json:"id" example:"76288dfbf134376e0b6fae8d8ff87c26"`
+	ImageName       string   `bson:"image_name" json:"image_name" example:"TF_ACULEI_25012021-203.jpg"`
+	PredictedAnimal string   `bson:"predicted_animal" json:"predicted_animal" example:"fox"`
+	TopPredictions  string   `bson:"top_predictions" json:"top_predictions" example:"[{'score': 0.9460213780403137, 'label': 'porcupine'}, {'score': 0.03565983474254608, 'label': 'wild boar'}, {'score': 0.012196173891425133, 'label': 'badger'}]"`
+	MoonPhase       *string  `bson:"moon_phase,omitempty" json:"moon_phase" example:"Waning Gibbous"`
+	Temperature     *float64 `bson:"temperature,omitempty" json:"temperature" example:"12.5"`
+	Date            *string  `bson:"date,omitempty" json:"date" example:"2021-01-25T03:01:32+01:00"`
+	Cam             *string  `bson:"cam,omitempty" json:"cam" example:"CAM7"`
 }
 
 func (a *AculeiImage) UnmarshalBSON(data []byte) error {
@@ -49,6 +50,15 @@ func (a *AculeiImage) UnmarshalBSON(data []byte) error {
 			a.PredictedAnimal = v
 		default:
 			return errors.New("predicted_animal is not a string")
+		}
+	}
+
+	if topPredictions, ok := raw["top_predictions"]; ok {
+		switch v := topPredictions.(type) {
+		case string:
+			a.TopPredictions = v
+		default:
+			return errors.New("top_predictions is not a string")
 		}
 	}
 

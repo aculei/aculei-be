@@ -3,19 +3,31 @@ definitions:
   models.AculeiImage:
     properties:
       cam:
+        example: CAM7
         type: string
       date:
+        example: "2021-01-25T03:01:32+01:00"
         type: string
       id:
+        example: 76288dfbf134376e0b6fae8d8ff87c26
         type: string
       image_name:
+        example: TF_ACULEI_25012021-203.jpg
         type: string
       moon_phase:
+        example: Waning Gibbous
         type: string
       predicted_animal:
+        example: fox
         type: string
       temperature:
+        example: 12.5
         type: number
+      top_predictions:
+        example: '[{''score'': 0.9460213780403137, ''label'': ''porcupine''}, {''score'':
+          0.03565983474254608, ''label'': ''wild boar''}, {''score'': 0.012196173891425133,
+          ''label'': ''badger''}]'
+        type: string
     type: object
   models.ErrorResponseModel:
     properties:

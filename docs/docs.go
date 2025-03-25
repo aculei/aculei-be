@@ -250,25 +250,36 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "cam": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "CAM7"
                 },
                 "date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2021-01-25T03:01:32+01:00"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "76288dfbf134376e0b6fae8d8ff87c26"
                 },
                 "image_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "TF_ACULEI_25012021-203.jpg"
                 },
                 "moon_phase": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Waning Gibbous"
                 },
                 "predicted_animal": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "fox"
                 },
                 "temperature": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 12.5
+                },
+                "top_predictions": {
+                    "type": "string",
+                    "example": "[{'score': 0.9460213780403137, 'label': 'porcupine'}, {'score': 0.03565983474254608, 'label': 'wild boar'}, {'score': 0.012196173891425133, 'label': 'badger'}]"
                 }
             }
         },
