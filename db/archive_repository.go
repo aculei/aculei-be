@@ -36,6 +36,7 @@ func (r *ArchiveRepository) GetArchive(
 	findOptions := options.Find()
 	findOptions.SetLimit(int64(paginator.Size))
 	findOptions.SetSkip(int64(paginator.Size * paginator.Page))
+	findOptions.SetSort(bson.D{{Key: paginator.SortBy.String(), Value: -1}})
 
 	cursor, err := coll.Find(ctx, filters, findOptions)
 	if err != nil {

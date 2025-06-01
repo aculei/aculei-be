@@ -45,6 +45,20 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "date",
+                            "cam",
+                            "animal",
+                            "temperature",
+                            "moon_phase"
+                        ],
+                        "type": "string",
+                        "default": "date",
+                        "description": "key to sort by",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -330,6 +344,9 @@ const docTemplate = `{
                 },
                 "size": {
                     "type": "integer"
+                },
+                "sortby": {
+                    "type": "string"
                 },
                 "total": {
                     "type": "integer"

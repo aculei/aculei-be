@@ -68,6 +68,7 @@ func (c *ArchiveController) injectUnAuthenticatedRoutes() {
 // @Router /v1/archive [get]
 // @Param page query int false "page index starting from 0"
 // @Param size query int false "number of items per page"
+// @Param sortBy query string false "key to sort by" Enums(date,cam,animal,temperature,moon_phase) default(date)
 // @Param animal query 			[]string false "list of animals" collectionFormat(multi)
 // @Param moon_phase query 		[]string false "list of moon phases" collectionFormat(multi)
 // @Param temperature query 	[]int false "list of temperatures" collectionFormat(multi)
@@ -87,6 +88,7 @@ func (c *ArchiveController) getArchive() gin.HandlerFunc {
 
 		page := ctx.Query("page")
 		size := ctx.Query("size")
+		sortBy := ctx.Query("sortBy")
 
 		fg, err := models.BuildFilterGroup(ctx)
 		if err != nil {
@@ -106,7 +108,7 @@ func (c *ArchiveController) getArchive() gin.HandlerFunc {
 			return
 		}
 
-		paginator := models.NewPaginator(page, size, archiveCount)
+		paginator := models.NewPaginator(page, size, archiveCount, sortBy)
 
 		archive, err = c.archiveService.GetArchive(ctx, *paginator, *fg)
 		if err != nil {
@@ -127,12 +129,13 @@ func (c *ArchiveController) getArchive() gin.HandlerFunc {
 		}
 
 		response := models.PaginatedResponseModel[models.AculeiImage]{
-			Page:  paginator.Page,
-			Size:  paginator.Size,
-			Next:  next,
-			Data:  *archive,
-			Total: archiveCount,
-			Count: len(*archive),
+			SortBy: paginator.SortBy.String(),
+			Page:   paginator.Page,
+			Size:   paginator.Size,
+			Next:   next,
+			Data:   *archive,
+			Total:  archiveCount,
+			Count:  len(*archive),
 		}
 
 		ctx.JSON(200, response)
