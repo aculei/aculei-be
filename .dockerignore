@@ -1,0 +1,6 @@
+README.md
+ansible/
+.github/
+Taskfile.yaml
+docker-compose.yaml
+.env

@@ -1,0 +1,52 @@
+---
+- name: Deploy Aculei Backend
+  hosts: myhosts
+  vars:
+    deploy_user: "{{ username | default(ansible_user) }}"
+    ghcr_username: "{{ lookup('env', 'GHCR_USERNAME') }}"
+    gh_token: "{{ lookup('env', 'GH_TOKEN') }}"
+    mongo_uri: "{{ lookup('env', 'MONGO_URI') }}"
+
+  tasks:
+    - name: Stop and remove existing container
+      shell: docker rm $(docker stop $(docker ps -a -q --filter ancestor=ghcr.io/aculei/aculei-be:main --format="{{ '{{.ID}}' }}"))
+    - name: Login to ghcr.io
+      shell: "echo {{ gh_token }} | docker login ghcr.io -u {{ ghcr_username }} --password-stdin"
+    - name: Pull backend image
+      shell: "docker pull ghcr.io/aculei/aculei-be:main"
+    - name: Run Docker container
+      ansible.builtin.command:
+        argv:
+          - docker
+          - run
+          - -d
+          - -p
+          - 8888:8888
+          - --restart
+          - on-failure
+          - -e
+          - GIN_MODE=release
+          - -e
+          - "MONGO_URI={{ mongo_uri }}"
+          - ghcr.io/aculei/aculei-be:main
+    - name: Ping backend to verify deployment
+      ansible.builtin.uri:
+        url: http://localhost:8888/health
+        method: GET
+        status_code: 200
+
+- name: Cleanup unused Docker resources
+  hosts: myhosts
+  tasks:
+    - name: Clean up unused images
+      ansible.builtin.shell: |
+        docker image prune -f
+    - name: Cleanup dangling volumes
+      ansible.builtin.shell: |
+        docker volume prune -f
+    - name: Cleanup unused networks
+      ansible.builtin.shell: |
+        docker network prune -f
+    - name: Cleanup unused build cache
+      ansible.builtin.shell: |
+        docker builder prune -f

@@ -1,9 +1,7 @@
 # aculei-be
 
-[![go](https://img.shields.io/badge/Go-00ADD8.svg?style=plain&logo=Go&logoColor=white)](https://go.dev/)
-
-<!-- [![docker](https://img.shields.io/badge/Docker-2496ED.svg?style=plain&logo=Docker&logoColor=white)](https://github.com/aculei/aculei-be/pkgs/container/aculei-be)
-[![swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=plain&logo=Swagger&logoColor=black)](https://aculei-be-org.onrender.com/swagger/index.html) -->
+[![go](https://img.shields.io/badge/Go-1.24-00ADD8?logo=Go)](https://go.dev/doc/go1.24)
+[![Build and push image to ghcr.io](https://github.com/aculei/aculei-be/actions/workflows/image-to-ghcr.yaml/badge.svg)](https://github.com/aculei/aculei-be/actions/workflows/image-to-ghcr.yaml)
 
 Server for [aculei.xyz](https://aculei.xyz)
 

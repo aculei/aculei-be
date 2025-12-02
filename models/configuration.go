@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -42,8 +43,8 @@ func NewConfiguration() Configuration {
 	}
 
 	string_environment := stringOrPanic("GIN_MODE")
+	gin.SetMode(string_environment)
 
-	os.Setenv("GIN_MODE", "development")
 	os.Setenv("ACULEI_BE_HTTP_HOST", "0.0.0.0")
 	os.Setenv("ACULEI_BE_HTTP_PORT", "8888")
 
@@ -51,7 +52,7 @@ func NewConfiguration() Configuration {
 	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")
 	mongoUri := stringOrPanic("MONGO_URI")
 
-	if string_environment == "production" {
+	if string_environment == "release" {
 		env = Production
 	} else {
 		env = Development
