@@ -31,6 +31,13 @@ jobs:
         run: |
           ansible-galaxy collection install community.docker
 
+      - name: Create Dynamic Inventory File
+        env:
+          HOST_IP: ${{ secrets.PROD_HOST_IP }}
+        run: |
+          echo "[myhosts]" > ansible/inventory.ini
+          echo "$HOST_IP" >> ansible/inventory.ini
+
       - name: Run Ansible Deployment Playbook
         env:
           GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
