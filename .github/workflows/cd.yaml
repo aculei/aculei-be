@@ -1,0 +1,42 @@
+name: cd
+
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key for Deployment
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PROD_SSH_KEY }}
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install ansible
+
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.docker
+
+      - name: Run Ansible Deployment Playbook
+        env:
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: |
+          ansible-playbook -i ansible/hosts.ini ansible/deploy.yaml \
+            --extra-vars "username=${{ secrets.DEPLOY_USER }}" \
+            -vvv
