@@ -44,6 +44,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          ansible-playbook -i ansible/hosts.ini ansible/deploy.yaml \
+          ansible-playbook -i ansible/inventory.ini ansible/deploy.yaml \
             --extra-vars "username=${{ secrets.DEPLOY_USER }}" \
+            --ssh-common-args='-o StrictHostKeyChecking=no' \
             -vvv
