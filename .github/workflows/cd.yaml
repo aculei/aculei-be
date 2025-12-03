@@ -35,8 +35,8 @@ jobs:
         env:
           HOST_IP: ${{ secrets.PROD_HOST_IP }}
         run: |
-          echo "[myhosts]" > ansible/inventory.ini
-          echo "$HOST_IP" >> ansible/inventory.ini
+          echo "[hosts]" > ansible/inventory.ini
+          echo "$HOST_IP ansible_user=${{ secrets.DEPLOY_USER }}"  >> ansible/inventory.ini
 
       - name: Run Ansible Deployment Playbook
         env:
@@ -45,6 +45,5 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/deploy.yaml \
-            --extra-vars "username=${{ secrets.DEPLOY_USER }}" \
             --ssh-common-args='-o StrictHostKeyChecking=no' \
             -vvv

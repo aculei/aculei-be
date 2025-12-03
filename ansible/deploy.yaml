@@ -1,6 +1,6 @@
 ---
 - name: Deploy Aculei Backend
-  hosts: myhosts
+  hosts: hosts
   vars:
     deploy_user: "{{ username | default(ansible_user) }}"
     ghcr_username: "{{ lookup('env', 'GHCR_USERNAME') }}"
@@ -34,7 +34,7 @@
         status_code: 200
 
 - name: Cleanup unused Docker resources
-  hosts: myhosts
+  hosts: hosts
   become: true
   tasks:
     - name: Clean up unused Docker resources
