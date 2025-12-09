@@ -47,7 +47,7 @@ func main() {
 	repos := mongo.InitRepositories()
 	archiveService := archive.NewService(configuration, mongo, &repos.Archive, rdb)
 	experienceService := experience.NewService(configuration, mongo, &repos.Experience)
-	filtersService := filters.NewService(configuration, mongo, &repos.Filters)
+	filtersService := filters.NewService(configuration, mongo, &repos.Filters, rdb)
 
 	if err = api.NewServer(
 		configuration,

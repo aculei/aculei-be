@@ -18,10 +18,8 @@
         password: "{{ gh_token }}"
 
     - name: Create .env file for Docker Compose
-      ansible.builtin.template:
+      copy:
         dest: "{{ project_dir }}/.env"
-        owner: "{{ deploy_user }}"
-        mode: "0600"
         content: |
           REDIS_HOST={{ redis_host }}
           MONGO_URI={{ mongo_uri }}
