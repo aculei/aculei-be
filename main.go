@@ -11,6 +11,8 @@ import (
 	"github.com/micheledinelli/aculei-be/db"
 	_ "github.com/micheledinelli/aculei-be/docs"
 	"github.com/micheledinelli/aculei-be/models"
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog/log"
 )
 
 // @title aculei-be
@@ -26,19 +28,24 @@ func main() {
 	var err error
 
 	ctx, cancel := context.WithCancel(context.Background())
-
 	defer cancel()
 
 	configuration := models.NewConfiguration()
 
 	mongo, err := db.InitDatabase(ctx, configuration.DB.MongoUri)
 	if err != nil {
-		os.Exit(1)
+		log.Panic().Err(err).Msg("Failed to initialize MongoDB connection")
 	}
 
-	repos := mongo.InitRepositories()
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     configuration.RedisHost,
+		Password: "",
+		DB:       0,
+		Protocol: 2,
+	})
 
-	archiveService := archive.NewService(configuration, mongo, &repos.Archive)
+	repos := mongo.InitRepositories()
+	archiveService := archive.NewService(configuration, mongo, &repos.Archive, rdb)
 	experienceService := experience.NewService(configuration, mongo, &repos.Experience)
 	filtersService := filters.NewService(configuration, mongo, &repos.Filters)
 

@@ -10,14 +10,14 @@ import (
 )
 
 type AculeiImage struct {
-	Id              string   `bson:"id" json:"id" example:"76288dfbf134376e0b6fae8d8ff87c26"`
-	ImageName       string   `bson:"image_name" json:"image_name" example:"TF_ACULEI_25012021-203.jpg"`
-	PredictedAnimal string   `bson:"predicted_animal" json:"predicted_animal" example:"fox"`
-	TopPredictions  string   `bson:"top_predictions" json:"top_predictions" example:"[{'score': 0.9460213780403137, 'label': 'porcupine'}, {'score': 0.03565983474254608, 'label': 'wild boar'}, {'score': 0.012196173891425133, 'label': 'badger'}]"`
-	MoonPhase       *string  `bson:"moon_phase,omitempty" json:"moon_phase" example:"Waning Gibbous"`
-	Temperature     *float64 `bson:"temperature,omitempty" json:"temperature" example:"12.5"`
-	Date            *string  `bson:"date,omitempty" json:"date" example:"2021-01-25T03:01:32+01:00"`
-	Cam             *string  `bson:"cam,omitempty" json:"cam" example:"CAM7"`
+	Id              string   `bson:"id" json:"id" example:"76288dfbf134376e0b6fae8d8ff87c26" redis:"id"`
+	ImageName       string   `bson:"image_name" json:"image_name" example:"TF_ACULEI_25012021-203.jpg" redis:"image_name"`
+	PredictedAnimal string   `bson:"predicted_animal" json:"predicted_animal" example:"fox" redis:"predicted_animal"`
+	TopPredictions  string   `bson:"top_predictions" json:"top_predictions" example:"[{'score': 0.9460213780403137, 'label': 'porcupine'}, {'score': 0.03565983474254608, 'label': 'wild boar'}, {'score': 0.012196173891425133, 'label': 'badger'}]" redis:"top_predictions"`
+	MoonPhase       *string  `bson:"moon_phase,omitempty" json:"moon_phase" example:"Waning Gibbous" redis:"moon_phase"`
+	Temperature     *float64 `bson:"temperature,omitempty" json:"temperature" example:"12.5" redis:"temperature"`
+	Date            *string  `bson:"date,omitempty" json:"date" example:"2021-01-25T03:01:32+01:00" redis:"date"`
+	Cam             *string  `bson:"cam,omitempty" json:"cam" example:"CAM7" redis:"cam"`
 }
 
 func (a *AculeiImage) UnmarshalBSON(data []byte) error {

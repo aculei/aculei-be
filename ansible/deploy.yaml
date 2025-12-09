@@ -7,6 +7,8 @@
     gh_token: "{{ lookup('env', 'GH_TOKEN') }}"
     mongo_uri: "{{ lookup('env', 'MONGO_URI') }}"
     image_name: "ghcr.io/aculei/aculei-be:main"
+    redis_host: "redis:6379"
+    project_dir: "/{{ deploy_user }}"
 
   tasks:
     - name: Login to ghcr.io
@@ -14,19 +16,17 @@
         registry: ghcr.io
         username: "{{ ghcr_username }}"
         password: "{{ gh_token }}"
-    - name: Stop and remove existing container
-      shell: docker rm $(docker stop $(docker ps -a -q --filter ancestor={{ image_name }} --format="{{ '{{.ID}}' }}"))
-    - name: Update backend container
-      community.docker.docker_container:
-        name: aculei_backend
-        image: "{{ image_name }}"
-        state: started
-        restart_policy: on-failure
-        ports:
-          - "8888:8888"
-        env:
-          GIN_MODE: "release"
+
+    - name: Deploy containers with docker compose
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        state: present
+        build: true
+        environment:
+          REDIS_HOST: "{{ redis_host }}"
           MONGO_URI: "{{ mongo_uri }}"
+          GIN_MODE: "release"
+
     - name: Ping backend to verify deployment
       ansible.builtin.uri:
         url: http://127.0.0.1:8888/health

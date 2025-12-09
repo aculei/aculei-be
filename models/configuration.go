@@ -27,6 +27,7 @@ type Configuration struct {
 	HTTPPort    int
 	CORS        CORSConfiguration
 	DB          DBConfiguration
+	RedisHost   string
 }
 
 type CORSConfiguration struct {
@@ -51,6 +52,7 @@ func NewConfiguration() Configuration {
 	httpHost := stringOrPanic("ACULEI_BE_HTTP_HOST")
 	httpPort := intOrPanic("ACULEI_BE_HTTP_PORT")
 	mongoUri := stringOrPanic("MONGO_URI")
+	redisHost := stringOrPanic("REDIS_HOST")
 
 	if string_environment == "release" {
 		env = Production
@@ -69,6 +71,7 @@ func NewConfiguration() Configuration {
 		DB: DBConfiguration{
 			MongoUri: mongoUri,
 		},
+		RedisHost: redisHost,
 	}
 }
 

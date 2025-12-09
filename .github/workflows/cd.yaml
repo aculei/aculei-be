@@ -45,5 +45,4 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/deploy.yaml \
-            --ssh-common-args='-o StrictHostKeyChecking=no' \
-            -vvv
+            --ssh-common-args='-o StrictHostKeyChecking=no'
