@@ -17,15 +17,15 @@
         username: "{{ ghcr_username }}"
         password: "{{ gh_token }}"
 
-    - name: Deploy containers with docker compose
+    - name: Deploy with docker compose
       community.docker.docker_compose_v2:
         project_src: "{{ project_dir }}"
         state: present
-        build: true
-        environment:
-          REDIS_HOST: "{{ redis_host }}"
-          MONGO_URI: "{{ mongo_uri }}"
-          GIN_MODE: "release"
+        build: policy
+      vars:
+        REDIS_HOST: "{{ redis_host }}"
+        MONGO_URI: "{{ mongo_uri }}"
+        GIN_MODE: "release"
 
     - name: Ping backend to verify deployment
       ansible.builtin.uri:
