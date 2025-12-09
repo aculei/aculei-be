@@ -21,7 +21,6 @@
       community.docker.docker_compose_v2:
         project_src: "{{ project_dir }}"
         state: present
-        build: policy
       vars:
         REDIS_HOST: "{{ redis_host }}"
         MONGO_URI: "{{ mongo_uri }}"

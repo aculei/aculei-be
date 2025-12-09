@@ -1,6 +1,5 @@
 services:
   backend:
-    build: .
     image: ghcr.io/aculei/aculei-be:main
     container_name: aculei-be
     ports:
