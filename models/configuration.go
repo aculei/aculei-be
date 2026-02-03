@@ -65,7 +65,7 @@ func NewConfiguration() Configuration {
 		HTTPHost:    httpHost,
 		HTTPPort:    httpPort,
 		CORS: CORSConfiguration{
-			AllowOrigins: []string{"*"},
+			AllowOrigins: []string{"https://aculei.xyz"},
 			AllowHeaders: []string{},
 		},
 		DB: DBConfiguration{
