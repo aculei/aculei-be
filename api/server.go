@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/micheledinelli/aculei-be/api/archive"
 	"github.com/micheledinelli/aculei-be/api/experience"
@@ -33,10 +34,10 @@ func NewServer(
 	engine.Use(cors.New(cors.Config{
 		AllowHeaders:     configuration.CORS.AllowHeaders,
 		AllowOrigins:     configuration.CORS.AllowOrigins,
-		AllowMethods:     []string{ "GET", "OPTIONS", "HEAD"},
+		AllowMethods:     []string{"GET", "OPTIONS", "HEAD"},
 		AllowCredentials: true,
 	}))
-	
+
 	engine.Use(func(c *gin.Context) {
 		c.Header("X-Frame-Options", "DENY")
 		c.Header("Content-Security-Policy", "default-src 'self'; connect-src *; font-src *; script-src-elem * 'unsafe-inline'; img-src * data:; style-src * 'unsafe-inline';")
@@ -47,6 +48,8 @@ func NewServer(
 		c.Header("Permissions-Policy", "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()")
 		c.Next()
 	})
+
+	engine.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithMinLength(512)))
 
 	server := &Server{
 		engine:            engine,

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/aculei/aculei-be:main
+    image: aculei-be
     container_name: aculei-be
     ports:
       - "8888:8888"
