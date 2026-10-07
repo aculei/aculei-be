@@ -35,6 +35,7 @@ func NewServer(
 		AllowHeaders:     configuration.CORS.AllowHeaders,
 		AllowOrigins:     configuration.CORS.AllowOrigins,
 		AllowMethods:     []string{"GET", "OPTIONS", "HEAD"},
+		AllowWildcard:    true,
 		AllowCredentials: true,
 	}))
 
